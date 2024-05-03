@@ -1,0 +1,15 @@
+[package]
+name = "test-boss"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+diesel-async = "0.4.1"
+dotenv = "0.15.0"
+log = "0.4.21"
+mongodb = "2.8.2"
+rocket = { version = "0.5.0", features = ["secrets", "uuid", "json"] }
+rocket_db_pools = "0.1.0"
+serde = "1.0.200"
