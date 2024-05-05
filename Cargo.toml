@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bson = { version = "2.10.0", features = ["chrono", "chrono-0_4"] }
+chrono = { version = "0.4.38", features = ["serde"] }
 diesel-async = "0.4.1"
 dotenv = "0.15.0"
 log = "0.4.21"

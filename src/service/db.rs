@@ -20,6 +20,6 @@ pub struct MongoRepo<T> {
 
 pub fn get_mongo_repo<T>(client: Client, dbname: &str, collname: &str) -> MongoRepo<T> {
   let db = client.database(dbname);
-  let col: Collection<T> = db.collection(collname);
+  let col = db.collection(collname);
   MongoRepo { db, col }
 }

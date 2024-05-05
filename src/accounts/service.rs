@@ -1,10 +1,11 @@
 use std::error::Error;
 
+use bson::DateTime;
 use mongodb::{
-  bson::{doc, oid::ObjectId}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
+  bson::{self, doc, oid::ObjectId}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
 };
 use crate::service::db::{ self, MongoRepo};
-use super::schema::Account;
+use super::schema::{Account, AccountDto};
 use rocket::futures::TryStreamExt;
 
 pub fn get_accounts_repo(client: Client) -> MongoRepo<Account> {
@@ -12,44 +13,45 @@ pub fn get_accounts_repo(client: Client) -> MongoRepo<Account> {
 }
 
 impl MongoRepo<Account> {
-  pub async fn get_all(&self) -> Result<Vec<Account>, Box<dyn Error>> {
+  pub async fn get_all(&self) -> Result<Vec<Account>, Box<dyn Error + Send + Sync>> {
     let cursor = self.col.find(None, None).await?;
     let accounts: Vec<Account> = cursor.try_collect().await?;
     Ok(accounts)
   }
 
-  pub async fn get_by_id(&self, id: &str) -> Result<Option<Account>, Box<dyn Error>> {
+  pub async fn get_by_id(&self, id: &str) -> Result<Option<Account>, Box<dyn Error + Send + Sync>> {
     let oid = ObjectId::parse_str(id)?;
     let filter = doc! { "_id": oid };
-    let user = self.col.find_one(filter, None).await?;
-    Ok(user)
+    let result = self.col.find_one(filter, None).await?;
+    Ok(result)
   }
 
-  pub async fn create(&self, account: Account) -> Result<InsertOneResult, Box<dyn Error>> {
+  pub async fn create(&self, data: AccountDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
+    let now = DateTime::from_chrono(chrono::Utc::now());
     let new_doc = Account {
       id: ObjectId::new(),
-      name: account.name,
-      created_at: account.created_at,
-      updated_at: account.updated_at,
+      name: data.name,
+      created_at: now,
+      updated_at: now,
     };
-    let user = self.col.insert_one(new_doc, None).await?;
-    Ok(user)
+    let result = self.col.insert_one(new_doc, None).await?;
+    Ok(result)
   }
 
-  pub async fn update(&self, account: Account) -> Result<UpdateResult, Box<dyn Error>> {
-    let filter = doc! { "_id": account.id };
+  pub async fn update(&self, id: String, data: AccountDto) -> Result<UpdateResult, Box<dyn Error + Send + Sync>> {
+    let now = chrono::Utc::now();
+    let filter = doc! { "_id": ObjectId::parse_str(&id)? };
     let upd_doc = doc! { "$set": {
-      "name": account.name,
-      "created_at": account.created_at,
-      "updated_at": account.updated_at
+      "name": data.name,
+      "updated_at": DateTime::from_chrono(now)
     } };
-    let user = self.col.update_one(filter, upd_doc, None).await?;
-    Ok(user)
+    let result = self.col.update_one(filter, upd_doc, None).await?;
+    Ok(result)
   }
 
-  pub async fn delete(&self, id: String) -> Result<DeleteResult, Box<dyn Error>> {
+  pub async fn delete(&self, id: String) -> Result<DeleteResult, Box<dyn Error + Send + Sync>> {
     let filter = doc! { "_id": id };
-    let user = self.col.delete_one(filter, None).await?;
-    Ok(user)
+    let result = self.col.delete_one(filter, None).await?;
+    Ok(result)
   }
 }
