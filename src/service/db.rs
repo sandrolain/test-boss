@@ -1,4 +1,6 @@
+use bson::{oid::ObjectId, DateTime};
 use mongodb::{error::Error, options::{ClientOptions, ServerApi, ServerApiVersion}, Client, Collection, Database};
+use rocket::serde::Serializer;
 
 pub async fn connect(uri: &str) -> Result<Client, Error> {
   let mut client_options = ClientOptions::parse_async(uri).await?;
@@ -23,3 +25,34 @@ pub fn get_mongo_repo<T>(client: Client, dbname: &str, collname: &str) -> MongoR
   let col = db.collection(collname);
   MongoRepo { db, col }
 }
+
+pub fn serialize_datetime<S>(date: &DateTime, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+  if serializer.is_human_readable() {
+    return serializer.serialize_some(date.to_chrono().to_rfc3339().as_str())
+  }
+  return serializer.serialize_some(date)
+}
+
+
+pub fn serialize_object_id<S>(object_id: &ObjectId, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+  if serializer.is_human_readable() {
+    return serializer.serialize_some(object_id.to_string().as_str())
+  }
+  return serializer.serialize_some(object_id)
+}
+
+// pub fn serialize_option_object_id<S>(object_id: &Option<ObjectId>, serializer: S) -> Result<S::Ok, S::Error>
+// where
+//     S: Serializer,
+// {
+//     match object_id {
+//       Some(ref object_id) => serializer.serialize_some(object_id.to_string().as_str()),
+//       None => serializer.serialize_none()
+//     }
+// }
