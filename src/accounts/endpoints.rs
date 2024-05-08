@@ -1,5 +1,5 @@
 use log::{error, warn};
-use rocket::{delete, get, http::Status, post, put, serde::json::Json, State};
+use rocket::{delete, get, http::Status, post, put, routes, serde::json::Json, State};
 use crate::{accounts::schema::AccountDto, service::db::MongoRepo};
 
 use super::schema::Account;
@@ -126,4 +126,8 @@ pub async fn delete_account(id: &str, account_repo: &State<MongoRepo<Account>>) 
       Err(Status::InternalServerError)
     },
   }
+}
+
+pub fn get_accounts_routes() -> Vec<rocket::Route> {
+  routes![get_accounts, get_account, create_account, update_account, delete_account]
 }
