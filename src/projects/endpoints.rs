@@ -1,5 +1,5 @@
 use log::{error, warn};
-use rocket::{delete, get, http::Status, post, put, routes, serde::json::Json, State};
+use rocket::{delete, get, post, put, routes, serde::json::Json, State};
 use crate::{projects::schema::ProjectDto, service::{db::MongoRepo, http_errors::JsonError}};
 
 use super::schema::Project;

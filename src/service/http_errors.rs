@@ -30,12 +30,25 @@ impl JsonError {
 
 impl std::fmt::Display for JsonError {
     fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(fmt, "Error {}.", self.get_http_status())
+        let msg = match self {
+            JsonError::NotFound(message) => {
+              message
+            },
+            JsonError::BadRequest(message) => {
+              message
+            },
+            JsonError::Internal(message) => {
+              message
+            }
+        };
+
+        write!(fmt, "Error {}: {}.", self.get_http_status(), msg)
     }
 }
 
 impl<'r> Responder<'r, 'static> for JsonError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+
         // serialize struct into json string
         let err_response = serde_json::to_string(&ErrorResponse{
             message: self.to_string()
