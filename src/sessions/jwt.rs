@@ -26,39 +26,6 @@ pub struct JWT {
   pub token: String
 }
 
-pub fn get_jwt_secret() -> String {
-  env::var("JWT_SECRET").expect("JWT_SECRET must be set.")
-}
-
-pub fn get_jwt_duration() -> i64 {
-  env::var("JWT_DURATION").expect("JWT_DURATION must be set.").parse::<i64>().unwrap()
-}
-
-pub fn create_jwt(session_id: &str) -> Result<String, Error> {
-  let secret = get_jwt_secret();
-  let duration = get_jwt_duration();
-  let delta = chrono::Duration::seconds(duration);
-  let expiration = Utc::now().checked_add_signed(delta).expect("Invalid timestamp").timestamp();
-  let claims = Claims {
-    session_id: session_id.to_string(),
-    exp: expiration as usize
-  };
-  let header = Header::new(Algorithm::HS512);
-  encode(&header, &claims, &EncodingKey::from_secret(secret.as_bytes()))
-}
-
-pub fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
-  let secret = get_jwt_secret();
-  match decode::<Claims>(
-    &token,
-    &DecodingKey::from_secret(secret.as_bytes()),
-    &Validation::new(Algorithm::HS512),
-  ) {
-    Ok(token) => Ok(token.claims),
-    Err(err) => Err(err.kind().to_owned())
-  }
-}
-
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for JWT {
   type Error = JsonError;
@@ -90,6 +57,39 @@ impl<'r> FromRequest<'r> for JWT {
         }
       },
     }
+  }
+}
+
+pub fn get_jwt_secret() -> String {
+  env::var("JWT_SECRET").expect("JWT_SECRET must be set.")
+}
+
+pub fn get_jwt_duration() -> i64 {
+  env::var("JWT_DURATION").expect("JWT_DURATION must be set.").parse::<i64>().unwrap()
+}
+
+pub fn create_jwt(session_id: &str) -> Result<String, Error> {
+  let secret = get_jwt_secret();
+  let duration = get_jwt_duration();
+  let delta = chrono::Duration::seconds(duration);
+  let expiration = Utc::now().checked_add_signed(delta).expect("Invalid timestamp").timestamp();
+  let claims = Claims {
+    session_id: session_id.to_string(),
+    exp: expiration as usize
+  };
+  let header = Header::new(Algorithm::HS512);
+  encode(&header, &claims, &EncodingKey::from_secret(secret.as_bytes()))
+}
+
+pub fn decode_jwt(token: String) -> Result<Claims, ErrorKind> {
+  let secret = get_jwt_secret();
+  match decode::<Claims>(
+    &token,
+    &DecodingKey::from_secret(secret.as_bytes()),
+    &Validation::new(Algorithm::HS512),
+  ) {
+    Ok(token) => Ok(token.claims),
+    Err(err) => Err(err.kind().to_owned())
   }
 }
 

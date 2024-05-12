@@ -1,8 +1,8 @@
 use log::{error, warn};
 use rocket::{delete, get, post, put, routes, serde::json::Json, State};
-use crate::{service::{db::MongoRepo, http_errors::JsonError, passwords::valid_password}, users::schema::UserDto};
+use crate::{service::{db::MongoRepo, http_errors::JsonError, validation::{valid_email, valid_password}}, sessions::{jwt::{get_jwt_session_and_user, JWT}, schema::Session}, users::schema::UserDto};
 
-use super::schema::{User, UserDetailsDto, UserRes};
+use super::{roles::is_admin, schema::{User, UserDetailsDto, UserRes}};
 
 pub fn user_to_res(user: User) -> UserRes {
   UserRes {
@@ -10,16 +10,22 @@ pub fn user_to_res(user: User) -> UserRes {
     email: user.email,
     firstname: user.firstname,
     lastname: user.lastname,
-    roles: user.roles,
+    roles: user.roles.unwrap_or(vec![]),
     created_at: user.created_at,
     updated_at: user.updated_at,
   }
 }
 
-
 #[get("/")]
-pub async fn get_users(user_repo: &State<MongoRepo<User>>) -> Result<Json<Vec<UserRes>>, JsonError> {
-  let res = user_repo.get_all().await;
+pub async fn get_users(jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<Vec<UserRes>>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
+  if !is_admin(&jwts.user) {
+    return Err(JsonError::Forbidden(
+      "You are not allowed to retrieve all users".to_string(),
+    ));
+  }
+
+  let res = users_repo.get_all().await;
   match res {
     Ok(users) => {
       let res: Vec<UserRes> = users.into_iter().map(user_to_res).collect();
@@ -33,8 +39,13 @@ pub async fn get_users(user_repo: &State<MongoRepo<User>>) -> Result<Json<Vec<Us
 }
 
 #[get("/<id>")]
-pub async fn get_user(id: &str, user_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
-  let res = user_repo.get_user_by_id(id).await;
+pub async fn get_user(id: &str, jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
+  if id != jwts.user.id.to_string() && !is_admin(&jwts.user) {
+    return Err(JsonError::Forbidden("Forbidden".to_string()));
+  }
+
+  let res = users_repo.get_user_by_id(id).await;
   match res {
     Ok(user) => match user {
       Some(user) => {
@@ -53,20 +64,27 @@ pub async fn get_user(id: &str, user_repo: &State<MongoRepo<User>>) -> Result<Js
 }
 
 #[post("/", format = "json", data = "<user>")]
-pub async fn create_user(user: Json<UserDto>, user_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
-  // TODO: email validation
-  // TODO: password validation
+pub async fn create_user(user: Json<UserDto>, jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
+  if !is_admin(&jwts.user) {
+    return Err(JsonError::Forbidden("Forbidden".to_string()));
+  }
+
+  if !valid_email(&user.email) {
+    return Err(JsonError::BadRequest("Invalid email address".to_string()));
+  }
+
   let data = user.into_inner();
   let password = data.password.clone();
   if !valid_password(&password) {
     return Err(JsonError::BadRequest("Password is not strong enough".to_string()));
   }
 
-  let res = user_repo.create_user(data).await;
+  let res = users_repo.create_user(data).await;
   match res {
     Ok(inserted) => {
       let id = inserted.inserted_id.as_object_id().unwrap().to_hex();
-      let user = user_repo.get_user_by_id(id.as_str()).await;
+      let user = users_repo.get_user_by_id(id.as_str()).await;
       match user {
         Ok(user) => match user {
           Some(user) => Ok(Json(user_to_res(user))),
@@ -121,8 +139,13 @@ pub async fn update_user(id: &str, user: Json<UserDetailsDto>, user_repo: &State
 }
 
 #[delete("/<id>")]
-pub async fn delete_user(id: &str, user_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
-  let user_res = user_repo.get_user_by_id(id).await;
+pub async fn delete_user(id: &str, jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<UserRes>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
+  if !is_admin(&jwts.user) {
+    return Err(JsonError::Forbidden("Forbidden".to_string()));
+  }
+
+  let user_res = users_repo.get_user_by_id(id).await;
   let user: User;
   match user_res {
     Ok(user_opt) => match user_opt {
@@ -137,7 +160,7 @@ pub async fn delete_user(id: &str, user_repo: &State<MongoRepo<User>>) -> Result
       return Err(JsonError::Internal("Error getting user".to_string()));
     }
   }
-  let res = user_repo.delete_user(id.to_string()).await;
+  let res = users_repo.delete_user(id.to_string()).await;
   match res {
     Ok(deleted) => {
       if deleted.deleted_count == 0 {

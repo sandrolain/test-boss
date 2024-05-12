@@ -9,6 +9,7 @@ pub struct Account {
   #[serde(rename = "_id", serialize_with = "serialize_object_id")]
   pub id: ObjectId,
   pub name: String,
+  pub members: Option<Vec<ObjectId>>,
   #[serde(serialize_with = "serialize_datetime")]
   pub created_at: DateTime,
   #[serde(serialize_with = "serialize_datetime")]

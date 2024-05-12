@@ -1,17 +1,18 @@
 
 use bcrypt::verify;
 use log::error;
-use rocket::{delete, get, http::Status, post, routes, serde::json::Json, State};
+use rocket::{delete, get, post, routes, serde::json::Json, State};
 
-use crate::{service::{db::MongoRepo, http_errors::JsonError, passwords::valid_password, schema::Empty}, users::{endpoints::user_to_res, schema::User}};
+use crate::{service::{db::MongoRepo, http_errors::JsonError, validation::valid_password, schema::Empty}, users::{endpoints::user_to_res, schema::User}};
 
 use super::{jwt::{create_jwt, get_jwt_session, get_jwt_session_and_user, JWT}, schema::{ChangePasswordDto, LoginDto, LoginResponseDto, Session}};
 
 #[post("/login", format = "json", data = "<login>")]
-pub async fn login(login: Json<LoginDto>, users_repo: &State<MongoRepo<User>>, sessions_repos: &State<MongoRepo<Session>>) -> Result<Json<LoginResponseDto>, Status> {
+pub async fn login(login: Json<LoginDto>, users_repo: &State<MongoRepo<User>>, sessions_repos: &State<MongoRepo<Session>>) -> Result<Json<LoginResponseDto>, JsonError> {
   let user = users_repo.verify_login(login.into_inner()).await;
   if user.is_err() {
-    return Err(Status::Unauthorized);
+    error!("Error verifying login: {}", user.unwrap_err());
+    return Err(JsonError::Internal("Error verifying login".to_string()));
   }
   let user = user.unwrap();
 
@@ -29,17 +30,17 @@ pub async fn login(login: Json<LoginDto>, users_repo: &State<MongoRepo<User>>, s
             })),
             Err(e) => {
               error!("Error creating token: {}", e);
-              Err(Status::InternalServerError)
+              Err(JsonError::Internal("Error creating token".to_string()))
             },
           }
         },
         Err(e) => {
           error!("Error creating session: {}", e);
-          Err(Status::InternalServerError)
+          Err(JsonError::Internal("Error creating session".to_string()))
         },
       }
     },
-    None => Err(Status::Unauthorized),
+    None => Err(JsonError::Unauthorized("Invalid credentials".to_string())),
   }
 
 }

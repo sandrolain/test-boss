@@ -57,7 +57,7 @@ impl MongoRepo<User> {
       pwdhash: pwdhash,
       firstname: data.firstname,
       lastname: data.lastname,
-      roles: data.roles,
+      roles: Some(data.roles),
       created_at: now,
       updated_at: now,
     };

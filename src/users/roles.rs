@@ -18,11 +18,19 @@ impl Role {
 }
 
 pub fn is_admin(user: &User) -> bool {
-  user.roles.contains(&Role::Admin.to_string())
+  if let Some(roles) = user.roles.as_ref() {
+    roles.contains(&Role::Admin.to_string())
+  } else {
+    false
+  }
 }
 
 pub fn is_account_manager(user: &User) -> bool {
-  user.roles.contains(&Role::AccountManager.to_string())
+  if let Some(roles) = user.roles.as_ref() {
+    roles.contains(&Role::AccountManager.to_string())
+  } else {
+    false
+  }
 }
 
 

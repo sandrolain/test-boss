@@ -11,7 +11,7 @@ pub struct User {
   pub pwdhash: String,
   pub firstname: String,
   pub lastname: String,
-  pub roles: Vec<String>,
+  pub roles: Option<Vec<String>>,
   #[serde(serialize_with = "serialize_datetime")]
   pub created_at: DateTime,
   #[serde(serialize_with = "serialize_datetime")]

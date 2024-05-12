@@ -11,6 +11,7 @@ bson = { version = "2.10.0", features = ["chrono", "chrono-0_4"] }
 chrono = { version = "0.4.38", features = ["serde"] }
 diesel-async = "0.4.1"
 dotenv = "0.15.0"
+email_address = "0.2.4"
 jsonwebtoken = "9.3.0"
 log = "0.4.21"
 mongodb = "2.8.2"

@@ -6,7 +6,7 @@ use super::schema::Account;
 
 #[get("/")]
 pub async fn get_accounts(account_repo: &State<MongoRepo<Account>>) -> Result<Json<Vec<Account>>, Status> {
-  let res = account_repo.get_all().await;
+  let res = account_repo.get_all_accounts().await;
   match res {
     Ok(accounts) => Ok(Json(accounts)),
     Err(e) => {
@@ -18,7 +18,7 @@ pub async fn get_accounts(account_repo: &State<MongoRepo<Account>>) -> Result<Js
 
 #[get("/<id>")]
 pub async fn get_account(id: &str, account_repo: &State<MongoRepo<Account>>) -> Result<Json<Account>, Status> {
-  let res = account_repo.get_by_id(id).await;
+  let res = account_repo.get_account_by_id(id).await;
   match res {
     Ok(account) => match account {
       Some(account) => Ok(Json(account)),
@@ -37,11 +37,11 @@ pub async fn get_account(id: &str, account_repo: &State<MongoRepo<Account>>) -> 
 #[post("/", format = "json", data = "<account>")]
 pub async fn create_account(account: Json<AccountDto>, account_repo: &State<MongoRepo<Account>>) -> Result<Json<Account>, Status> {
   let data = account.into_inner();
-  let res = account_repo.create(data).await;
+  let res = account_repo.create_account(data).await;
   match res {
     Ok(inserted) => {
       let id = inserted.inserted_id.as_object_id().unwrap().to_hex();
-      let account = account_repo.get_by_id(id.as_str()).await;
+      let account = account_repo.get_account_by_id(id.as_str()).await;
       match account {
         Ok(account) => match account {
           Some(account) => Ok(Json(account)),
@@ -66,14 +66,14 @@ pub async fn create_account(account: Json<AccountDto>, account_repo: &State<Mong
 #[put("/<id>", format = "json", data = "<account>")]
 pub async fn update_account(id: &str, account: Json<AccountDto>, account_repo: &State<MongoRepo<Account>>) -> Result<Json<Account>, Status> {
   let data = account.into_inner();
-  let res = account_repo.update(id.to_string(), data).await;
+  let res = account_repo.update_account(id.to_string(), data).await;
   match res {
     Ok(updated) => {
       if updated.modified_count == 0 {
         warn!("Account not found: {}", id);
         return Err(Status::NotFound);
       }
-      let account = account_repo.get_by_id(id).await;
+      let account = account_repo.get_account_by_id(id).await;
       match account {
         Ok(account) => match account {
           Some(account) => Ok(Json(account)),
@@ -97,7 +97,7 @@ pub async fn update_account(id: &str, account: Json<AccountDto>, account_repo: &
 
 #[delete("/<id>")]
 pub async fn delete_account(id: &str, account_repo: &State<MongoRepo<Account>>) -> Result<Json<Account>, Status> {
-  let account_res = account_repo.get_by_id(id).await;
+  let account_res = account_repo.get_account_by_id(id).await;
   let account: Account;
   match account_res {
     Ok(account_opt) => match account_opt {
@@ -112,7 +112,7 @@ pub async fn delete_account(id: &str, account_repo: &State<MongoRepo<Account>>) 
       return Err(Status::InternalServerError);
     }
   }
-  let res = account_repo.delete(id.to_string()).await;
+  let res = account_repo.delete_account(id.to_string()).await;
   match res {
     Ok(deleted) => {
       if deleted.deleted_count == 0 {
