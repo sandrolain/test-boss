@@ -11,21 +11,25 @@ pub struct ErrorResponse {
     pub message: String,
 }
 
-#[derive( Debug, Clone)]
+#[derive(Debug, Clone)]
 pub enum JsonError {
-    Internal(String),
-    NotFound(String),
-    BadRequest(String),
+  Internal(String),
+  NotFound(String),
+  BadRequest(String),
+  Unauthorized(String),
+  Forbidden(String),
 }
 
 impl JsonError {
-    fn get_http_status(&self) -> Status {
-        match self {
-            JsonError::Internal(_) => Status::InternalServerError,
-            JsonError::NotFound(_) => Status::NotFound,
-            _ => Status::BadRequest,
-        }
+  fn get_http_status(&self) -> Status {
+    match self {
+      JsonError::Internal(_) => Status::InternalServerError,
+      JsonError::NotFound(_) => Status::NotFound,
+      JsonError::BadRequest(_) => Status::BadRequest,
+      JsonError::Unauthorized(_) => Status::Unauthorized,
+      JsonError::Forbidden(_) => Status::Forbidden
     }
+  }
 }
 
 impl std::fmt::Display for JsonError {
@@ -38,6 +42,12 @@ impl std::fmt::Display for JsonError {
               message
             },
             JsonError::Internal(message) => {
+              message
+            },
+            JsonError::Unauthorized(message) => {
+              message
+            },
+            JsonError::Forbidden(message) => {
               message
             }
         };
@@ -63,6 +73,12 @@ impl<'r> Responder<'r, 'static> for JsonError {
             },
             JsonError::Internal(message) => {
               error!("Internal: {}", message);
+            },
+            JsonError::Unauthorized(message) => {
+              warn!("Unauthorized: {}", message);
+            },
+            JsonError::Forbidden(message) => {
+              warn!("Forbidden: {}", message);
             }
         }
 

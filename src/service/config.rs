@@ -4,17 +4,19 @@ extern crate dotenv;
 use dotenv::dotenv;
 
 pub struct Config {
-  pub mongodb_uri: String
+  pub mongodb_uri: String,
+  pub jwt_secret: String,
+  pub jwt_duration: i64,
+  pub session_duration: i64
 }
 
 pub fn get_config() -> Result<Config, Box<dyn Error>> {
   dotenv().ok();
-  let mongo_uri = match env::var("MONGODB_URI") {
-    Ok(v) => v.to_string(),
-    Err(_) => format!("Error loading env variable"),
-  };
   let config = Config {
-    mongodb_uri: mongo_uri
+    mongodb_uri: env::var("MONGODB_URI").expect("MONGODB_URI must be set."),
+    jwt_secret: env::var("JWT_SECRET").expect("JWT_SECRET must be set."),
+    jwt_duration: env::var("JWT_DURATION").expect("JWT_DURATION must be set.").parse::<i64>().expect("JWT_DURATION must be an integer."),
+    session_duration: env::var("SESSION_DURATION").expect("SESSION_DURATION must be set.").parse::<i64>().expect("SESSION_DURATION must be an integer."),
   };
   Ok(config)
 }

@@ -1,5 +1,5 @@
-use bson::{oid::ObjectId, DateTime};
-use mongodb::{error::Error, options::{ClientOptions, ServerApi, ServerApiVersion}, Client, Collection, Database};
+use bson::{doc, oid::ObjectId, DateTime};
+use mongodb::{error::Error, options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion}, results::CreateIndexResult, Client, Collection, Database, IndexModel};
 use rocket::serde::Serializer;
 
 pub async fn connect(uri: &str) -> Result<Client, Error> {
@@ -18,6 +18,15 @@ pub async fn connect(uri: &str) -> Result<Client, Error> {
 pub struct MongoRepo<T> {
   pub db: Database,
   pub col: Collection<T>,
+}
+
+
+impl<T> MongoRepo<T> {
+  pub async fn unique_index(&self, prop: &str) -> Result<CreateIndexResult, Error> {
+    let opts = IndexOptions::builder().unique(true).build();
+    let index = IndexModel::builder().keys(doc! { prop: 1 }).options(opts).build();
+    self.col.create_index(index, None).await
+  }
 }
 
 pub fn get_mongo_repo<T>(client: Client, dbname: &str, collname: &str) -> MongoRepo<T> {
