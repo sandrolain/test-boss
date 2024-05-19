@@ -1,17 +1,26 @@
 use log::{error, warn};
 use rocket::{delete, get, http::Status, post, put, routes, serde::json::Json, State};
-use crate::{accounts::schema::AccountDto, service::db::MongoRepo};
+use crate::{accounts::schema::AccountDto, service::{db::MongoRepo, http_errors::JsonError}, sessions::{jwt::{get_jwt_session_and_user, JWT}, schema::Session}, users::{roles::is_admin, schema::User}};
+use crate::projects::account_endpoints::{create_account_project, get_account_projects};
 
-use super::schema::Account;
+use super::schema::{Account, AccountsList};
 
-#[get("/")]
-pub async fn get_accounts(account_repo: &State<MongoRepo<Account>>) -> Result<Json<Vec<Account>>, Status> {
-  let res = account_repo.get_all_accounts().await;
+#[get("/?<page>&<per_page>&<sort_by>&<sort_dir>")]
+pub async fn get_accounts(jwt: Result<JWT, JsonError>, page: usize, per_page: usize, sort_by: &str, sort_dir: &str, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>, account_repo: &State<MongoRepo<Account>>) -> Result<Json<AccountsList>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
+  if !is_admin(&jwts.user) {
+    return Err(JsonError::Forbidden(
+      "You are not allowed to retrieve all users".to_string(),
+    ));
+  }
+
+  let skip = page * per_page;
+  let res = account_repo.get_accounts(skip, per_page, sort_by, sort_dir).await;
   match res {
     Ok(accounts) => Ok(Json(accounts)),
     Err(e) => {
       error!("Error getting accounts: {}", e);
-      Err(Status::InternalServerError)
+      Err(JsonError::Internal("Error getting accounts".to_string()))
     },
   }
 }
@@ -129,5 +138,5 @@ pub async fn delete_account(id: &str, account_repo: &State<MongoRepo<Account>>) 
 }
 
 pub fn get_accounts_routes() -> Vec<rocket::Route> {
-  routes![get_accounts, get_account, create_account, update_account, delete_account]
+  routes![get_accounts, get_account, create_account, update_account, delete_account, get_account_projects, create_account_project]
 }

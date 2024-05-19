@@ -7,7 +7,9 @@ mod sessions;
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
 use projects::service::get_projects_repo;
+use rocket::http::Method;
 use rocket::{catch, catchers, launch, Request};
+use rocket_cors::{AllowedHeaders, AllowedOrigins};
 use service::config::get_config;
 use service::db::connect;
 use service::http_errors::JsonError;
@@ -30,11 +32,24 @@ async fn rocket() -> _ {
 
   let _ = users_repo.unique_index("email").await;
 
+  let allowed_origins = AllowedOrigins::some_exact(&[&cfg.allowed_origins]);
+
+    // You can also deserialize this
+  let cors = rocket_cors::CorsOptions {
+      allowed_origins,
+      allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Put, Method::Options].into_iter().map(From::from).collect(),
+      allowed_headers: AllowedHeaders::all(),
+      allow_credentials: true,
+      ..Default::default()
+  }
+  .to_cors().unwrap();
+
   rocket::build()
     .mount("/api/v1/accounts", get_accounts_routes())
     .mount("/api/v1/projects", get_projects_routes())
     .mount("/api/v1/sessions", get_sessions_routes())
     .mount("/api/v1/users", get_users_routes())
+    .attach(cors)
     .manage(cfg)
     .manage(account_repo)
     .manage(project_repo)

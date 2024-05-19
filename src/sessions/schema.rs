@@ -1,7 +1,7 @@
 use bson::{oid::ObjectId, DateTime};
 use rocket::serde::{Deserialize, Serialize};
 
-use crate::{service::db::{serialize_datetime, serialize_object_id}, users::schema::{User, UserRes}};
+use crate::{accounts::schema::LoginAccount, service::db::{serialize_datetime, serialize_object_id}, users::schema::{User, UserRes}};
 
 pub struct JWTSession {
   pub token: String,
@@ -36,6 +36,7 @@ pub struct LoginDto {
 pub struct LoginResponseDto {
   pub token: String,
   pub user: UserRes,
+  pub accounts: Vec<LoginAccount>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

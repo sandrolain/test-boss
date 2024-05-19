@@ -19,6 +19,13 @@ impl MongoRepo<Project> {
     Ok(projects)
   }
 
+  pub async fn get_account_projects(&self, account_id: &str) -> Result<Vec<Project>, Box<dyn Error + Send + Sync>> {
+    let filter = doc! { "account_id": ObjectId::parse_str(account_id)? };
+    let cursor = self.col.find(filter, None).await?;
+    let projects: Vec<Project> = cursor.try_collect().await?;
+    Ok(projects)
+  }
+
   pub async fn get_by_id(&self, id: &str) -> Result<Option<Project>, Box<dyn Error + Send + Sync>> {
     let oid = ObjectId::parse_str(id)?;
     let filter = doc! { "_id": oid };
@@ -26,10 +33,11 @@ impl MongoRepo<Project> {
     Ok(result)
   }
 
-  pub async fn create(&self, data: ProjectDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
+  pub async fn create(&self, account_id: &str, data: ProjectDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
     let now = DateTime::from_chrono(chrono::Utc::now());
     let new_doc = Project {
       id: ObjectId::new(),
+      account_id: ObjectId::parse_str(account_id)?,
       name: data.name,
       version: data.version,
       description: data.description,

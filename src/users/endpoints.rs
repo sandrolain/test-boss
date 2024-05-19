@@ -2,7 +2,7 @@ use log::{error, warn};
 use rocket::{delete, get, post, put, routes, serde::json::Json, State};
 use crate::{service::{db::MongoRepo, http_errors::JsonError, validation::{valid_email, valid_password}}, sessions::{jwt::{get_jwt_session_and_user, JWT}, schema::Session}, users::schema::UserDto};
 
-use super::{roles::is_admin, schema::{User, UserDetailsDto, UserRes}};
+use super::{roles::is_admin, schema::{User, UserDetailsDto, UserRes, UsersResList}};
 
 pub fn user_to_res(user: User) -> UserRes {
   UserRes {
@@ -11,13 +11,14 @@ pub fn user_to_res(user: User) -> UserRes {
     firstname: user.firstname,
     lastname: user.lastname,
     roles: user.roles.unwrap_or(vec![]),
+    accounts: user.accounts.unwrap_or(vec![]),
     created_at: user.created_at,
     updated_at: user.updated_at,
   }
 }
 
 #[get("/")]
-pub async fn get_users(jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<Vec<UserRes>>, JsonError> {
+pub async fn get_users(jwt: Result<JWT, JsonError>, sessions_repos: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>) -> Result<Json<UsersResList>, JsonError> {
   let jwts = get_jwt_session_and_user(sessions_repos, users_repo, jwt).await?;
   if !is_admin(&jwts.user) {
     return Err(JsonError::Forbidden(
@@ -25,11 +26,11 @@ pub async fn get_users(jwt: Result<JWT, JsonError>, sessions_repos: &State<Mongo
     ));
   }
 
-  let res = users_repo.get_all().await;
+  let res = users_repo.get_users(0, 10, "name".to_string(), "asc".to_string()).await;
   match res {
     Ok(users) => {
-      let res: Vec<UserRes> = users.into_iter().map(user_to_res).collect();
-      Ok(Json(res))
+      let list: Vec<UserRes> = users.list.into_iter().map(user_to_res).collect();
+      Ok(Json(UsersResList { list, total: users.total }))
     },
     Err(e) => {
       error!("Error getting users: {}", e);

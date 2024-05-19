@@ -2,10 +2,10 @@ use std::error::Error;
 
 use bson::DateTime;
 use mongodb::{
-  bson::{self, doc, oid::ObjectId}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
+  bson::{self, doc, oid::ObjectId}, options::{Collation, FindOptions}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
 };
 use crate::service::db::{ self, MongoRepo};
-use super::schema::{Account, AccountDto};
+use super::schema::{Account, AccountDto, AccountsList};
 use rocket::futures::TryStreamExt;
 
 pub fn get_accounts_repo(client: Client) -> MongoRepo<Account> {
@@ -19,6 +19,31 @@ impl MongoRepo<Account> {
     Ok(accounts)
   }
 
+  pub async fn get_accounts(&self, skip: usize, limit: usize, sort_by: &str, sort_dir: &str) -> Result<AccountsList, Box<dyn Error + Send + Sync>> {
+    let filter = doc! {};
+
+    let sort = match sort_dir {
+      "asc" => Some(doc! { sort_by: 1 }),
+      "desc" => Some(doc! { sort_by: -1 }),
+      _ => None
+    };
+
+    let options = FindOptions::builder()
+      .collation(Some(Collation::builder().locale("en").build()))
+      .skip(skip as u64)
+      .limit(limit as i64)
+      .sort(sort)
+      .build();
+    let cursor = self.col.find(filter.clone(), options).await?;
+    let list: Vec<Account> = cursor.try_collect().await?;
+    let total = self.col.count_documents(filter, None).await?;
+
+    Ok(AccountsList {
+      list,
+      total,
+    })
+  }
+
   pub async fn get_account_by_id(&self, id: &str) -> Result<Option<Account>, Box<dyn Error + Send + Sync>> {
     let oid = ObjectId::parse_str(id)?;
     let filter = doc! { "_id": oid };
@@ -26,12 +51,18 @@ impl MongoRepo<Account> {
     Ok(result)
   }
 
+  pub async fn get_accounts_by_object_ids(&self, oids: Vec<ObjectId>) -> Result<Vec<Account>, Box<dyn Error + Send + Sync>> {
+    let filter = doc! { "_id": { "$in": oids } };
+    let cursor = self.col.find(filter, None).await?;
+    let accounts: Vec<Account> = cursor.try_collect().await?;
+    Ok(accounts)
+  }
+
   pub async fn create_account(&self, data: AccountDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
     let now = DateTime::from_chrono(chrono::Utc::now());
     let new_doc = Account {
       id: ObjectId::new(),
       name: data.name,
-      members: Some(vec![]),
       created_at: now,
       updated_at: now,
     };

@@ -5,7 +5,7 @@ use mongodb::{
   bson::{self, doc, oid::ObjectId}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
 };
 use crate::service::db::{ self, MongoRepo};
-use super::schema::{Session};
+use super::schema::Session;
 
 pub fn get_sessions_repo(client: Client) -> MongoRepo<Session> {
   return db::get_mongo_repo(client, "test_boss", "sessions");
@@ -55,3 +55,5 @@ impl MongoRepo<Session> {
     Ok(result)
   }
 }
+
+

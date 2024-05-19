@@ -4,10 +4,10 @@ use bcrypt::{hash, verify, DEFAULT_COST};
 use bson::DateTime;
 use log::warn;
 use mongodb::{
-  bson::{self, doc, oid::ObjectId}, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
+  bson::{self, doc, oid::ObjectId}, options::FindOptions, results::{DeleteResult, InsertOneResult, UpdateResult}, Client
 };
 use crate::{service::db::{ self, MongoRepo}, sessions::schema::LoginDto};
-use super::schema::{User, UserDetailsDto, UserDto};
+use super::schema::{User, UserDetailsDto, UserDto, UsersList};
 use rocket::futures::TryStreamExt;
 
 pub fn get_users_repo(client: Client) -> MongoRepo<User> {
@@ -35,6 +35,30 @@ impl MongoRepo<User> {
     Ok(users)
   }
 
+  pub async fn get_users(&self, skip: u64, limit: i64, sort_by: String, sort_dir: String) -> Result<UsersList, Box<dyn Error + Send + Sync>> {
+    let filter = doc! {};
+
+    let sort = match sort_dir.as_str() {
+      "asc" => Some(doc! { sort_by: 1 }),
+      "desc" => Some(doc! { sort_by: -1 }),
+      _ => None
+    };
+
+    let options = FindOptions::builder()
+      .skip(skip)
+      .limit(limit)
+      .sort(sort)
+      .build();
+    let cursor = self.col.find(filter.clone(), options).await?;
+    let list: Vec<User> = cursor.try_collect().await?;
+    let total = self.col.count_documents(filter, None).await?;
+
+    Ok(UsersList {
+      list,
+      total,
+    })
+  }
+
   pub async fn get_user_by_id(&self, id: &str) -> Result<Option<User>, Box<dyn Error + Send + Sync>> {
     let oid = ObjectId::parse_str(id)?;
     let filter = doc! { "_id": oid };
@@ -58,6 +82,7 @@ impl MongoRepo<User> {
       firstname: data.firstname,
       lastname: data.lastname,
       roles: Some(data.roles),
+      accounts: Some(vec![]),
       created_at: now,
       updated_at: now,
     };

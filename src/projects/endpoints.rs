@@ -1,6 +1,6 @@
 use log::{error, warn};
 use rocket::{delete, get, post, put, routes, serde::json::Json, State};
-use crate::{projects::schema::ProjectDto, service::{db::MongoRepo, http_errors::JsonError}};
+use crate::{projects::{account_endpoints::{create_account_project, get_account_projects}, schema::ProjectDto}, service::{db::MongoRepo, http_errors::JsonError}};
 
 use super::schema::Project;
 
@@ -34,34 +34,6 @@ pub async fn get_project(id: &str, project_repo: &State<MongoRepo<Project>>) -> 
   }
 }
 
-#[post("/", format = "json", data = "<project>")]
-pub async fn create_project(project: Json<ProjectDto>, project_repo: &State<MongoRepo<Project>>) -> Result<Json<Project>, JsonError> {
-  let data = project.into_inner();
-  let res = project_repo.create(data).await;
-  match res {
-    Ok(inserted) => {
-      let id = inserted.inserted_id.as_object_id().unwrap().to_hex();
-      let project = project_repo.get_by_id(id.as_str()).await;
-      match project {
-        Ok(project) => match project {
-          Some(project) => Ok(Json(project)),
-          None => {
-            warn!("Project not found: {}", id);
-            Err(JsonError::NotFound("Project not found".to_string()))
-          },
-        },
-        Err(e) => {
-          error!("Error getting project: {}", e);
-          Err(JsonError::Internal("Error getting project".to_string()))
-        },
-      }
-    },
-    Err(e) => {
-      error!("Error creating project: {}", e);
-      Err(JsonError::Internal("Error creating project".to_string()))
-    },
-  }
-}
 
 #[put("/<id>", format = "json", data = "<project>")]
 pub async fn update_project(id: &str, project: Json<ProjectDto>, project_repo: &State<MongoRepo<Project>>) -> Result<Json<Project>, JsonError> {
@@ -129,5 +101,5 @@ pub async fn delete_project(id: &str, project_repo: &State<MongoRepo<Project>>) 
 }
 
 pub fn get_projects_routes() -> Vec<rocket::Route> {
-  routes![get_projects, get_project, create_project, update_project, delete_project]
+  routes![get_projects, get_project, update_project, delete_project]
 }

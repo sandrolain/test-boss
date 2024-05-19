@@ -9,7 +9,6 @@ pub struct Account {
   #[serde(rename = "_id", serialize_with = "serialize_object_id")]
   pub id: ObjectId,
   pub name: String,
-  pub members: Option<Vec<ObjectId>>,
   #[serde(serialize_with = "serialize_datetime")]
   pub created_at: DateTime,
   #[serde(serialize_with = "serialize_datetime")]
@@ -19,4 +18,22 @@ pub struct Account {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AccountDto {
   pub name: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct LoginAccount {
+  #[serde(rename = "_id", serialize_with = "serialize_object_id")]
+  pub id: ObjectId,
+  pub name: String,
+  #[serde(serialize_with = "serialize_datetime")]
+  pub created_at: DateTime,
+  #[serde(serialize_with = "serialize_datetime")]
+  pub updated_at: DateTime,
+  pub is_manager: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct AccountsList {
+  pub list: Vec<Account>,
+  pub total: u64,
 }
