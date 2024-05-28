@@ -1,12 +1,14 @@
 mod service;
-mod accounts;
-mod projects;
 mod users;
 mod sessions;
+mod accounts;
+mod projects;
+mod testlists;
 
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
 use projects::service::get_projects_repo;
+use testlists::service::get_testlists_repo;
 use rocket::http::Method;
 use rocket::{catch, catchers, launch, Request};
 use rocket_cors::{AllowedHeaders, AllowedOrigins};
@@ -25,12 +27,14 @@ async fn rocket() -> _ {
 
   let client = connect(&cfg.mongodb_uri).await.unwrap();
 
+  let testlist_repo = get_testlists_repo(client.clone());
   let account_repo = get_accounts_repo(client.clone());
   let project_repo = get_projects_repo(client.clone());
   let sessions_repo = get_sessions_repo(client.clone());
   let users_repo = get_users_repo(client.clone());
 
   let _ = users_repo.unique_index("email").await;
+  let _ = project_repo.index("account_id").await;
 
   let allowed_origins = AllowedOrigins::some_exact(&[&cfg.allowed_origins]);
 
@@ -55,6 +59,7 @@ async fn rocket() -> _ {
     .manage(project_repo)
     .manage(sessions_repo)
     .manage(users_repo)
+    .manage(testlist_repo)
     .register("/", catchers![
       catch_bad_request,
       catch_unauthorized,

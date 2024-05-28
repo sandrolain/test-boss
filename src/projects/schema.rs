@@ -11,6 +11,7 @@ pub struct Project {
   pub version: String,
   pub description: String,
   pub repository: String,
+  #[serde(serialize_with = "serialize_object_id")]
   pub account_id: ObjectId,
   #[serde(serialize_with = "serialize_datetime")]
   pub created_at: DateTime,

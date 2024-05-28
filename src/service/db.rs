@@ -22,6 +22,10 @@ pub struct MongoRepo<T> {
 
 
 impl<T> MongoRepo<T> {
+  pub async fn index(&self, prop: &str) -> Result<CreateIndexResult, Error> {
+    let index = IndexModel::builder().keys(doc! { prop: 1 }).build();
+    self.col.create_index(index, None).await
+  }
   pub async fn unique_index(&self, prop: &str) -> Result<CreateIndexResult, Error> {
     let opts = IndexOptions::builder().unique(true).build();
     let index = IndexModel::builder().keys(doc! { prop: 1 }).options(opts).build();

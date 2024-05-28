@@ -13,12 +13,6 @@ pub fn get_accounts_repo(client: Client) -> MongoRepo<Account> {
 }
 
 impl MongoRepo<Account> {
-  pub async fn get_all_accounts(&self) -> Result<Vec<Account>, Box<dyn Error + Send + Sync>> {
-    let cursor = self.col.find(None, None).await?;
-    let accounts: Vec<Account> = cursor.try_collect().await?;
-    Ok(accounts)
-  }
-
   pub async fn get_accounts(&self, skip: usize, limit: usize, sort_by: &str, sort_dir: &str) -> Result<AccountsList, Box<dyn Error + Send + Sync>> {
     let filter = doc! {};
 

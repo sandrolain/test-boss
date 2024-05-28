@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-GB" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4686852710008865123" datatype="html">
+        <source>Are you sure you want to logout?</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5620406908320216029" datatype="html">
+        <source>Logged out</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">174</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7819314041543176992" datatype="html">
+        <source>Close</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/services/notification/notification.service.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/services/notification/notification.service.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/services/notification/notification.service.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6570363013146073520" datatype="html">
+        <source>Dashboard</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/dashboard/dashboard.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="2454050363478003966" datatype="html">
+        <source>Login</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">32,33</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4768749765465246664" datatype="html">
+        <source>Email</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8876822653942344131" datatype="html">
+        <source>Please enter a valid email address</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1431416938026210429" datatype="html">
+        <source>Password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3988969057702370063" datatype="html">
+        <source>Password is required and must be valid</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1908285951500318953" datatype="html">
+        <source> Login </source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5351947831424640475" datatype="html">
+        <source> Forgot your password? </source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7930303524961343722" datatype="html">
+        <source>Invalid form data</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1979220067472581595" datatype="html">
+        <source>Logged in successfully</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">108</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4469513261081670706" datatype="html">
+        <source>Invalid email or password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/login/login.component.ts</context>
+          <context context-type="linenumber">113</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4142905511270073968" datatype="html">
+        <source>Specify new password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">37,38</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8193885020179228014" datatype="html">
+        <source>New Password is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="527722082178767018" datatype="html">
+        <source>New Password must be valid</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">64</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="224198626235381453" datatype="html">
+        <source>Confirm Password is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">61</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">75</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5057952125218231398" datatype="html">
+        <source>Confirm Password must be valid</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">63</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6474256332825962976" datatype="html">
+        <source>New Passwords not match</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">65</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3768927257183755959" datatype="html">
+        <source>Save</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">68,69</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7420623990150183817" datatype="html">
+        <source>Back to login</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">71,72</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">95,96</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8439744088379244615" datatype="html">
+        <source>Specify email for the account to recover</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">77,78</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8552587679160911578" datatype="html">
+        <source>Email is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="2601145525349175931" datatype="html">
+        <source>Invalid email format</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">89</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="2457182709923488390" datatype="html">
+        <source>Send recovery email</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">92,93</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1140599166278569579" datatype="html">
+        <source>Invalid email</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6241082793157895587" datatype="html">
+        <source>Recovery email sent</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">156</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7587267532186459937" datatype="html">
+        <source>Error sending recovery email</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">159</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5800187103306660757" datatype="html">
+        <source>Password updated</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">175</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3135731805991227327" datatype="html">
+        <source>Error updating password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/password-recovery/password-recovery.component.ts</context>
+          <context context-type="linenumber">179</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="2984628903434675339" datatype="html">
+        <source>Edit Profile</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5653149179944666342" datatype="html">
+        <source>Firstname is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3845055899247304099" datatype="html">
+        <source>Lastname is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">44</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4032868780241841552" datatype="html">
+        <source>Invalid phone format</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">66</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">68</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3620188369327429839" datatype="html">
+        <source> Save </source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">72,73</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">74,75</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3129604876054849035" datatype="html">
+        <source>Please fill in all required fields</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">120</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">121</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1755386264837692034" datatype="html">
+        <source>User updated</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1869957093722684162" datatype="html">
+        <source>Failed to update user</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-edit/profile-edit.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6582573664846559511" datatype="html">
+        <source>Change Password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">35</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4436854494802826064" datatype="html">
+        <source>Old Password is required</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">48</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="9143075567262098758" datatype="html">
+        <source>Old Password must be valid</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">50</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="9068926282349592226" datatype="html">
+        <source>Password changed successfully</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7809316081761737993" datatype="html">
+        <source>Failed to change password</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile-password/profile-password.component.ts</context>
+          <context context-type="linenumber">133</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4915431133669985304" datatype="html">
+        <source>Profile</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">32,33</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="1074038423230804155" datatype="html">
+        <source>ID:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">68,69</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5928203858083757821" datatype="html">
+        <source>Firstname:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">72,73</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8842515364334454611" datatype="html">
+        <source>Lastname:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">76,77</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6631334172623029500" datatype="html">
+        <source>Email:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">80,81</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4378227938065070603" datatype="html">
+        <source>Phone:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">84,85</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5025457187887640726" datatype="html">
+        <source>Address:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">88,89</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7536530809097976712" datatype="html">
+        <source>Crop Image</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">177</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3413845016400017963" datatype="html">
+        <source>Failed to update user image</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">194</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7705508697330810763" datatype="html">
+        <source>Delete Account</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="577064441120663273" datatype="html">
+        <source>Are you sure you want to delete your account?</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">214</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6481344873478774943" datatype="html">
+        <source>Failed to delete user</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/profile/profile.component.ts</context>
+          <context context-type="linenumber">229</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="7035314289264169914" datatype="html">
+        <source>User:</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">19</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8753467415679831636" datatype="html">
+        <source>Failed to load user</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">115</context>
+        </context-account>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">112</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="6287744377084126862" datatype="html">
+        <source>Failed to load user image</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">123</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4839682406703705780" datatype="html">
+        <source>Delete User</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4794731989135207662" datatype="html">
+        <source>Are you sure you want to delete this user?</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">137</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4430279976796477709" datatype="html">
+        <source>User deleted</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-detail/users-detail.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="5891941941917080206" datatype="html">
+        <source>Create User</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="8016290784896337541" datatype="html">
+        <source>Edit User: </source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">104</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="893010969450094043" datatype="html">
+        <source>User created</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="64584826557783083" datatype="html">
+        <source>Failed to create user</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users-edit/users-edit.component.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="4555457172864212828" datatype="html">
+        <source>Users</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users.component.ts</context>
+          <context context-type="linenumber">41,42</context>
+        </context-account>
+      </trans-unit>
+      <trans-unit id="3351499761161266791" datatype="html">
+        <source>Failed to fetch users</source>
+        <context-account purpose="location">
+          <context context-type="sourcefile">src/app/views/users/users.component.ts</context>
+          <context context-type="linenumber">163</context>
+        </context-account>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

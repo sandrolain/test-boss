@@ -29,12 +29,6 @@ impl MongoRepo<User> {
     Ok(None)
   }
 
-  pub async fn get_all(&self) -> Result<Vec<User>, Box<dyn Error + Send + Sync>> {
-    let cursor = self.col.find(None, None).await?;
-    let users: Vec<User> = cursor.try_collect().await?;
-    Ok(users)
-  }
-
   pub async fn get_users(&self, skip: u64, limit: i64, sort_by: String, sort_dir: String) -> Result<UsersList, Box<dyn Error + Send + Sync>> {
     let filter = doc! {};
 

@@ -26,14 +26,14 @@ impl MongoRepo<Project> {
     Ok(projects)
   }
 
-  pub async fn get_by_id(&self, id: &str) -> Result<Option<Project>, Box<dyn Error + Send + Sync>> {
+  pub async fn get_project_by_id(&self, id: &str) -> Result<Option<Project>, Box<dyn Error + Send + Sync>> {
     let oid = ObjectId::parse_str(id)?;
     let filter = doc! { "_id": oid };
     let result = self.col.find_one(filter, None).await?;
     Ok(result)
   }
 
-  pub async fn create(&self, account_id: &str, data: ProjectDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
+  pub async fn create_project(&self, account_id: &str, data: ProjectDto) -> Result<InsertOneResult, Box<dyn Error + Send + Sync>> {
     let now = DateTime::from_chrono(chrono::Utc::now());
     let new_doc = Project {
       id: ObjectId::new(),
@@ -64,7 +64,7 @@ impl MongoRepo<Project> {
   }
 
   pub async fn delete(&self, id: String) -> Result<DeleteResult, Box<dyn Error + Send + Sync>> {
-    let filter = doc! { "_id": id };
+    let filter = doc! { "_id": ObjectId::parse_str(&id)? };
     let result = self.col.delete_one(filter, None).await?;
     Ok(result)
   }
