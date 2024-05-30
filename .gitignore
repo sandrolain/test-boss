@@ -2,3 +2,5 @@
 .DS_Store
 /target
 .env
+.vscode
+/localtest

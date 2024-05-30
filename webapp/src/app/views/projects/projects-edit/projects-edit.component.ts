@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { semverValidator, urlValidator } from '../../../lib/validators';
+import { AuthService } from '../../../services/auth/auth.service';
 import { NotificationService } from '../../../services/notification/notification.service';
 import {
   ProjectDto,
@@ -17,9 +19,6 @@ import {
 } from '../../../services/projects/projects.model';
 import { ProjectsService } from '../../../services/projects/projects.service';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
-import { AccountsService } from '../../../services/accounts/accounts.service';
-import { AuthService } from '../../../services/auth/auth.service';
-import { semverValidator, urlValidator } from '../../../lib/validators';
 
 @Component({
   selector: 'app-projects-edit',
@@ -131,7 +130,7 @@ export class ProjectsEditComponent {
         )
         .then(() => {
           this.notificationService.confirm($localize`Project updated`);
-          this.router.navigate(['/projects', this.project!._id]);
+          this.router.navigate(['/projects/detail', this.project!._id]);
         })
         .catch(() => {
           this.notificationService.error($localize`Failed to update project`);
@@ -148,7 +147,7 @@ export class ProjectsEditComponent {
         .createProject(account_id, this.projectForm.value as ProjectEditDto)
         .then(() => {
           this.notificationService.confirm($localize`Project created`);
-          this.router.navigate(['/projects', this.project!._id]);
+          this.router.navigate(['/projects/detail', this.project!._id]);
         })
         .catch(() => {
           this.notificationService.error($localize`Failed to create project`);

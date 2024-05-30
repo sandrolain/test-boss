@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
+import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-testlists-detail',
@@ -59,6 +61,7 @@ import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.c
 })
 export class TestlistsDetailComponent implements OnInit {
   private router = inject(Router);
+  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private testlistsService = inject(TestlistsService);
 
@@ -88,13 +91,28 @@ export class TestlistsDetailComponent implements OnInit {
   }
 
   deleteTestlist() {
-    this.testlistsService
-      .deleteTestlist(this.testlist!._id)
-      .then(() => {
-        this.router.navigate(['/projects']);
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: $localize`Delete Testlist`,
+          message: $localize`Are you sure you want to delete this testlist?`,
+        },
       })
-      .catch((err) => {
-        this.notificationService.error($localize`Failed to delete testlist`);
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.testlistsService
+            .deleteTestlist(this.testlist!._id)
+            .then(() => {
+              this.router.navigate(['/projects']);
+            })
+            .catch((err) => {
+              console.error(err);
+              this.notificationService.error(
+                $localize`Failed to delete testlist`
+              );
+            });
+        }
       });
   }
 }

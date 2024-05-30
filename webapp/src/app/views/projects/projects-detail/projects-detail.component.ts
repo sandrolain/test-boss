@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,16 +9,13 @@ import { ProjectDto } from '../../../services/projects/projects.model';
 import { ProjectsService } from '../../../services/projects/projects.service';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
-import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
 import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testlists.component';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-projects-detail',
   standalone: true,
   imports: [
     PageTitleComponent,
-    SectionTitleComponent,
     ProjectsTestlistsComponent,
     MatIconModule,
     MatButtonModule,
@@ -77,7 +75,6 @@ import { DatePipe } from '@angular/common';
       </div>
     </div>
     @if(project?._id) {
-    <app-section-title i18n>Project Testlists</app-section-title>
     <app-projects-testlists
       [projectId]="project?._id || ''"
     ></app-projects-testlists>

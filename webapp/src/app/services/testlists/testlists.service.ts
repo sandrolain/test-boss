@@ -24,12 +24,6 @@ export class TestlistsService {
     );
   }
 
-  getTestlist(id: string): Promise<TestlistDto> {
-    return firstValueFrom(
-      this.http.get<TestlistDto>(`${this.apiBaseUrl}/v1/testlists/${enc(id)}`)
-    );
-  }
-
   createTestlist(
     project_id: string,
     data: TestlistEditDto
@@ -39,6 +33,12 @@ export class TestlistsService {
         `${this.apiBaseUrl}/v1/projects/${enc(project_id)}/testlists`,
         data
       )
+    );
+  }
+
+  getTestlist(id: string): Promise<TestlistDto> {
+    return firstValueFrom(
+      this.http.get<TestlistDto>(`${this.apiBaseUrl}/v1/testlists/${enc(id)}`)
     );
   }
 
