@@ -7,10 +7,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
-import {
-  TestlistDto,
-  TestlistEditDto,
-} from '../../../services/testlists/testlists.model';
+import { TestlistDto } from '../../../services/testlists/testlists.model';
 import { TestlistsService } from '../../../services/testlists/testlists.service';
 import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
 import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists-edit.component';
@@ -95,8 +92,6 @@ export class ProjectsTestlistsComponent implements OnInit {
         this.notificationService.error($localize`Failed to load testlists`);
       });
   }
-
-  saveTestlist(prijectId: string, testlistId: string, data: TestlistEditDto) {}
 
   editTestlist(data?: TestlistDto) {
     this.dialog

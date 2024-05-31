@@ -22,7 +22,7 @@ import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testl
     DatePipe,
   ],
   template: `
-    <app-page-title icon="project_work" [back]="['/projects']">
+    <app-page-title icon="group_work" [back]="['/projects']">
       {{ pageTitle }} {{ title }}
       <button mat-icon-button (click)="editProject()" tool>
         <mat-icon>edit</mat-icon>

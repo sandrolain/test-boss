@@ -1,15 +1,16 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { TestlistDto } from '../../../services/testlists/testlists.model';
-import { TestlistsService } from '../../../services/testlists/testlists.service';
 import { DatePipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
-import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
+import { TestlistDto } from '../../../services/testlists/testlists.model';
+import { TestlistsService } from '../../../services/testlists/testlists.service';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
+import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
+import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.component';
 
 @Component({
   selector: 'app-testlists-detail',
@@ -22,7 +23,10 @@ import { MatDialog } from '@angular/material/dialog';
     DatePipe,
   ],
   template: `
-    <app-page-title icon="quiz" [back]="['/dashboard']">
+    <app-page-title
+      icon="quiz"
+      [back]="['/projects/detail', testlist?.project_id]"
+    >
       {{ pageTitle }} {{ title }}
       <button mat-icon-button (click)="editTestlist()" tool>
         <mat-icon>edit</mat-icon>
@@ -68,26 +72,51 @@ export class TestlistsDetailComponent implements OnInit {
   pageTitle = $localize`Test List: `;
   title = '';
 
+  private testlistId!: string;
   testlist?: TestlistDto;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.testlistsService
-        .getTestlist(params['id'])
-        .then((testlist) => {
-          this.testlist = testlist;
-          this.title = testlist.name;
-        })
-        .catch((err) => {
-          this.notificationService.error($localize`Failed to get testlist`);
-        });
+      this.testlistId = params['id'];
+      this.refresh();
     });
   }
 
+  refresh() {
+    this.testlistsService
+      .getTestlist(this.testlistId)
+      .then((testlist) => {
+        this.testlist = testlist;
+        this.title = testlist.name;
+      })
+      .catch((err) => {
+        console.error(err);
+        this.notificationService.error($localize`Failed to get testlist`);
+      });
+  }
+
   editTestlist() {
-    this.router.navigate(['/testlists/edit', this.testlist?._id]);
+    const data = this.testlist!;
+    this.dialog
+      .open(TestlistsEditComponent, { data, minWidth: '720px' })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.testlistsService
+            .updateTestlist(data._id, res)
+            .then(() => {
+              this.notificationService.confirm($localize`Testlist updated`);
+              this.refresh();
+            })
+            .catch(() => {
+              this.notificationService.error(
+                $localize`Failed to update testlist`
+              );
+            });
+        }
+      });
   }
 
   deleteTestlist() {

@@ -8,6 +8,7 @@ mod testlists;
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
 use projects::service::get_projects_repo;
+use testlists::endpoints::get_testlists_routes;
 use testlists::service::get_testlists_repo;
 use rocket::http::Method;
 use rocket::{catch, catchers, launch, Request};
@@ -53,6 +54,7 @@ async fn rocket() -> _ {
     .mount("/api/v1/projects", get_projects_routes())
     .mount("/api/v1/sessions", get_sessions_routes())
     .mount("/api/v1/users", get_users_routes())
+    .mount("/api/v1/testlists", get_testlists_routes())
     .attach(cors)
     .manage(cfg)
     .manage(account_repo)

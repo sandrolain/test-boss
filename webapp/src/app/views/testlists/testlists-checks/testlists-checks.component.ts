@@ -1,20 +1,28 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
-import { TestlistDto } from '../../../services/testlists/testlists.model';
-import { MatTable, MatTableModule } from '@angular/material/table';
-import { AlertMessageComponent } from '../../../widgets/alert-message/alert-message.component';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
 import {
+  CdkDrag,
   CdkDragDrop,
   CdkDropList,
-  CdkDrag,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { TestlistsService } from '../../../services/testlists/testlists.service';
-import { NotificationService } from '../../../services/notification/notification.service';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { TestchecksService } from '../../../services/testchecks/testchecks.service';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTable, MatTableModule } from '@angular/material/table';
+import { NotificationService } from '../../../services/notification/notification.service';
 import { TestcheckDto } from '../../../services/testchecks/testchecks.model';
+import { TestchecksService } from '../../../services/testchecks/testchecks.service';
+import { TestlistDto } from '../../../services/testlists/testlists.model';
+import { AlertMessageComponent } from '../../../widgets/alert-message/alert-message.component';
+import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
 
 @Component({
   selector: 'app-testlists-checks',
@@ -27,8 +35,16 @@ import { TestcheckDto } from '../../../services/testchecks/testchecks.model';
     AlertMessageComponent,
     CdkDropList,
     CdkDrag,
+    SectionTitleComponent,
   ],
   template: `
+    <app-section-title
+      ><span i18n>Checks</span>
+      <button mat-raised-button color="primary" (click)="create()" tool>
+        <mat-icon>add</mat-icon>
+        <span i18n>Add</span>
+      </button>
+    </app-section-title>
     <mat-table
       #table
       class="mat-elevation-z8"
@@ -85,11 +101,6 @@ import { TestcheckDto } from '../../../services/testchecks/testchecks.model';
         </mat-cell>
       </tr>
     </mat-table>
-
-    <button mat-raised-button color="primary" (click)="create()">
-      <mat-icon>add</mat-icon>
-      <span i18n>Add</span>
-    </button>
   `,
   styles: `
     table {
@@ -123,7 +134,7 @@ import { TestcheckDto } from '../../../services/testchecks/testchecks.model';
     }
   `,
 })
-export class TestlistsChecksComponent implements OnInit {
+export class TestlistsChecksComponent implements OnInit, OnChanges {
   private notificationService = inject(NotificationService);
   private testchecksService = inject(TestchecksService);
 
@@ -142,6 +153,16 @@ export class TestlistsChecksComponent implements OnInit {
   testchecks: TestcheckDto[] = [];
 
   ngOnInit(): void {
+    this.refresh();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['testlist'] && !changes['testlist'].firstChange) {
+      this.refresh();
+    }
+  }
+
+  refresh() {
     if (!this.testlist) {
       return;
     }
@@ -149,11 +170,12 @@ export class TestlistsChecksComponent implements OnInit {
       .getTestlistChecks(this.testlist._id)
       .then((testchecks) => {
         this.testchecks = testchecks;
-        this.table.renderRows();
       })
       .catch((err) => {
         console.error(err);
-        this.notificationService.error($localize`Failed to load testchecks`);
+        this.notificationService.error(
+          $localize`Failed to load testlist checks`
+        );
       });
   }
 
