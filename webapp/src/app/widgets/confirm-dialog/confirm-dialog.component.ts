@@ -16,7 +16,7 @@ import {
       <p>{{ data.message }}</p>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-raised-button (click)="cancel()">Cancel</button>
+      <button mat-button (click)="cancel()">Cancel</button>
       <button mat-raised-button color="warn" (click)="confirm()">
         Confirm
       </button>

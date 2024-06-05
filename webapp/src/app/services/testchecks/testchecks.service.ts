@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { TestcheckDto, TestcheckEditDto } from './testchecks.model';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { enc } from '../../lib/http';
+import { TestcheckDto, TestcheckEditDto } from './testchecks.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,15 @@ export class TestchecksService {
       this.http.post<TestcheckDto>(
         `${this.apiBaseUrl}/v1/testlists/${enc(testlist_id)}/testchecks`,
         data
+      )
+    );
+  }
+
+  updateTestchecksPositions(testlist_id: string, testchecks: string[]) {
+    return firstValueFrom(
+      this.http.put<TestcheckDto[]>(
+        `${this.apiBaseUrl}/v1/testlists/${enc(testlist_id)}/testchecks`,
+        testchecks
       )
     );
   }

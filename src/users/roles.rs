@@ -25,12 +25,4 @@ pub fn is_admin(user: &User) -> bool {
   }
 }
 
-pub fn is_account_manager(user: &User) -> bool {
-  if let Some(roles) = user.roles.as_ref() {
-    roles.contains(&Role::AccountManager.to_string())
-  } else {
-    false
-  }
-}
-
 

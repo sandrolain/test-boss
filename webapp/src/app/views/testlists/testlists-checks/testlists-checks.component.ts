@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { NotificationService } from '../../../services/notification/notification.service';
@@ -22,7 +23,9 @@ import { TestcheckDto } from '../../../services/testchecks/testchecks.model';
 import { TestchecksService } from '../../../services/testchecks/testchecks.service';
 import { TestlistDto } from '../../../services/testlists/testlists.model';
 import { AlertMessageComponent } from '../../../widgets/alert-message/alert-message.component';
+import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
 import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
+import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testchecks-edit.component';
 
 @Component({
   selector: 'app-testlists-checks',
@@ -39,10 +42,15 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
   ],
   template: `
     <app-section-title
-      ><span i18n>Checks</span>
-      <button mat-raised-button color="primary" (click)="create()" tool>
+      ><span i18n>Tests</span>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="createTestcheck()"
+        tool
+      >
         <mat-icon>add</mat-icon>
-        <span i18n>Add</span>
+        <span i18n>Add Test</span>
       </button>
     </app-section-title>
     <mat-table
@@ -86,6 +94,17 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
           </mat-chip-set>
         </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="tools">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let item" class="td-tools">
+          <button mat-icon-button (click)="editCheck(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteCheck(item)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row
@@ -93,14 +112,10 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
         cdkDrag
         [cdkDragData]="row"
       ></mat-row>
-
-      <!-- Row shown when there is no matching data. -->
-      <tr class="mat-row" *matNoDataRow>
-        <mat-cell class="mat-cell" colspan="7">
-          <app-alert-message>No data matching the filter</app-alert-message>
-        </mat-cell>
-      </tr>
     </mat-table>
+    @if(!testchecks.length) {
+    <app-alert-message>No tests found</app-alert-message>
+    }
   `,
   styles: `
     table {
@@ -135,6 +150,7 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
   `,
 })
 export class TestlistsChecksComponent implements OnInit, OnChanges {
+  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private testchecksService = inject(TestchecksService);
 
@@ -148,6 +164,7 @@ export class TestlistsChecksComponent implements OnInit, OnChanges {
     'description',
     'expected',
     'tags',
+    'tools',
   ];
 
   testchecks: TestcheckDto[] = [];
@@ -188,22 +205,85 @@ export class TestlistsChecksComponent implements OnInit, OnChanges {
     );
     moveItemInArray(this.testchecks, previousIndex, event.currentIndex);
     this.table.renderRows();
-    // TODO: save order
+    this.saveSorting();
   }
 
-  create() {
-    if (!this.testlist) {
-      return;
-    }
-    // this.testlistsService
-    //   .createTestCheck(this.testlist._id)
-    //   .then((testcheck) => {
-    //     this.testchecks.push(testcheck);
-    //     this.table.renderRows();
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //     this.notificationService.error($localize`Failed to create testcheck`);
-    //   });
+  createTestcheck() {
+    this.dialog
+      .open(TestchecksEditComponent, { minWidth: '720px' })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.testchecksService
+            .createTestcheck(this.testlist!._id, res)
+            .then(() => {
+              this.notificationService.confirm($localize`Test created`);
+              this.refresh();
+            })
+            .catch(() => {
+              this.notificationService.error($localize`Failed to create test`);
+            });
+        }
+      });
+  }
+
+  editCheck(testcheck: TestcheckDto) {
+    this.dialog
+      .open(TestchecksEditComponent, {
+        minWidth: '720px',
+        data: testcheck,
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.testchecksService
+            .updateTestcheck(testcheck._id, res)
+            .then(() => {
+              this.notificationService.confirm($localize`Test updated`);
+              this.refresh();
+            })
+            .catch(() => {
+              this.notificationService.error($localize`Failed to update test`);
+            });
+        }
+      });
+  }
+
+  deleteCheck(testcheck: TestcheckDto) {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: $localize`Delete test`,
+          message: $localize`Are you sure you want to delete this test?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.testchecksService
+            .deleteTestcheck(testcheck._id)
+            .then(() => {
+              this.notificationService.confirm($localize`Test deleted`);
+              this.refresh();
+            })
+            .catch(() => {
+              this.notificationService.error($localize`Failed to delete test`);
+            });
+        }
+      });
+  }
+
+  saveSorting() {
+    this.testchecksService
+      .updateTestchecksPositions(
+        this.testlist!._id,
+        this.testchecks.map((d) => d._id)
+      )
+      .then(() => {
+        this.notificationService.confirm($localize`Test checks updated`);
+      })
+      .catch(() => {
+        this.notificationService.error($localize`Failed to update test checks`);
+      });
   }
 }

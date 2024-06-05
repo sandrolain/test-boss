@@ -4,10 +4,13 @@ mod sessions;
 mod accounts;
 mod projects;
 mod testlists;
+mod testchecks;
 
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
 use projects::service::get_projects_repo;
+use testchecks::endpoints::get_testchecks_routes;
+use testchecks::service::get_testchecks_repo;
 use testlists::endpoints::get_testlists_routes;
 use testlists::service::get_testlists_repo;
 use rocket::http::Method;
@@ -29,6 +32,7 @@ async fn rocket() -> _ {
   let client = connect(&cfg.mongodb_uri).await.unwrap();
 
   let testlist_repo = get_testlists_repo(client.clone());
+  let testcheck_repo = get_testchecks_repo(client.clone());
   let account_repo = get_accounts_repo(client.clone());
   let project_repo = get_projects_repo(client.clone());
   let sessions_repo = get_sessions_repo(client.clone());
@@ -36,6 +40,14 @@ async fn rocket() -> _ {
 
   let _ = users_repo.unique_index("email").await;
   let _ = project_repo.index("account_id").await;
+  let _ = project_repo.index("name").await;
+  let _ = testlist_repo.index("account_id").await;
+  let _ = testlist_repo.index("project_id").await;
+  let _ = testlist_repo.index("name").await;
+  let _ = testcheck_repo.index("testlist_id").await;
+  let _ = testcheck_repo.index("project_id").await;
+  let _ = testcheck_repo.index("account_id").await;
+  let _ = testcheck_repo.index("name").await;
 
   let allowed_origins = AllowedOrigins::some_exact(&[&cfg.allowed_origins]);
 
@@ -50,11 +62,12 @@ async fn rocket() -> _ {
   .to_cors().unwrap();
 
   rocket::build()
-    .mount("/api/v1/accounts", get_accounts_routes())
-    .mount("/api/v1/projects", get_projects_routes())
     .mount("/api/v1/sessions", get_sessions_routes())
     .mount("/api/v1/users", get_users_routes())
+    .mount("/api/v1/accounts", get_accounts_routes())
+    .mount("/api/v1/projects", get_projects_routes())
     .mount("/api/v1/testlists", get_testlists_routes())
+    .mount("/api/v1/testchecks", get_testchecks_routes())
     .attach(cors)
     .manage(cfg)
     .manage(account_repo)
@@ -62,6 +75,7 @@ async fn rocket() -> _ {
     .manage(sessions_repo)
     .manage(users_repo)
     .manage(testlist_repo)
+    .manage(testcheck_repo)
     .register("/", catchers![
       catch_bad_request,
       catch_unauthorized,

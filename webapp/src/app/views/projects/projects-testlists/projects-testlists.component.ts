@@ -27,7 +27,7 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
   template: `
     <app-section-title
       ><span i18n>Project Testlists</span>
-      <button mat-raised-button color="primary" (click)="editTestlist()" tool>
+      <button mat-raised-button color="primary" (click)="createTestlist()" tool>
         <mat-icon>add</mat-icon>
         <span i18n>Add testlist</span>
       </button>
@@ -93,37 +93,23 @@ export class ProjectsTestlistsComponent implements OnInit {
       });
   }
 
-  editTestlist(data?: TestlistDto) {
+  createTestlist() {
     this.dialog
-      .open(TestlistsEditComponent, { data, minWidth: '720px' })
+      .open(TestlistsEditComponent, { minWidth: '720px' })
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          if (data) {
-            this.testlistsService
-              .updateTestlist(data._id, res)
-              .then(() => {
-                this.notificationService.confirm($localize`Testlist updated`);
-                this.refresh();
-              })
-              .catch(() => {
-                this.notificationService.error(
-                  $localize`Failed to update testlist`
-                );
-              });
-          } else {
-            this.testlistsService
-              .createTestlist(this.projectId, res)
-              .then(() => {
-                this.notificationService.confirm($localize`Testlist created`);
-                this.refresh();
-              })
-              .catch(() => {
-                this.notificationService.error(
-                  $localize`Failed to create testlist`
-                );
-              });
-          }
+          this.testlistsService
+            .createTestlist(this.projectId, res)
+            .then(() => {
+              this.notificationService.confirm($localize`Testlist created`);
+              this.refresh();
+            })
+            .catch(() => {
+              this.notificationService.error(
+                $localize`Failed to create testlist`
+              );
+            });
         }
       });
   }

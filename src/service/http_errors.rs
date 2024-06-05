@@ -1,5 +1,5 @@
 use log::{error, warn};
-use serde::{Serialize};
+use serde::Serialize;
 use std::io::Cursor;
 use rocket::http::Status;
 use rocket::request::Request;
