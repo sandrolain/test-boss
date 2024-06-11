@@ -1,6 +1,6 @@
 use log::{error, warn};
 use rocket::{delete, get, post, put, routes, serde::json::Json, State};
-use crate::{service::{db::MongoRepo, http_errors::JsonError}, sessions::{jwt::{get_jwt_session_and_user, JWT}, schema::{JWTSessionAndUser, Session}}, testchecks::schema::{Testcheck, TestcheckDto}, testlists::schema::TestlistDto, users::{roles::is_admin, schema::User}};
+use crate::{service::{db::MongoRepo, http_errors::JsonError}, sessions::{jwt::{get_jwt_session_and_user, JWT}, schema::{JWTSessionAndUser, Session}}, testchecks::schema::{Testcheck, TestcheckDto}, testlists::schema::TestlistDto, testreports::schema::{Testreport, TestreportDto}, testresults::schema::Testresult, users::{roles::is_admin, schema::User}};
 
 use super::schema::Testlist;
 
@@ -150,8 +150,61 @@ pub async fn update_testchecks_positions(jwt: Result<JWT, JsonError>, testlist_i
   }
 }
 
+
+#[post("/<testlist_id>/testreports", format = "json", data = "<data>")]
+pub async fn create_testreport(jwt: Result<JWT, JsonError>, testlist_id: &str, data: Json<TestreportDto>, sessions_repo: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>, testlist_repo: &State<MongoRepo<Testlist>>, testcheck_repo: &State<MongoRepo<Testcheck>>, testreport_repo: &State<MongoRepo<Testreport>>, testresult_repo: &State<MongoRepo<Testresult>>) -> Result<Json<Testreport>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repo, users_repo, jwt).await?;
+  let testlist = allowed_for_testlist(jwts, testlist_repo, testlist_id).await?;;
+  let data = data.into_inner();
+  let account_id = testlist.account_id.to_hex();
+  let project_id = testlist.project_id.to_hex();
+
+  let testchecks = testcheck_repo.get_testlist_testchecks(testlist_id).await;
+  if(testchecks.is_err()) {
+    error!("Error getting testchecks: {}", testlist_id);
+    return Err(JsonError::Internal("Error getting testchecks".to_string()));
+  }
+  let testchecks = testchecks.unwrap();
+
+  let res = testreport_repo.create_testreport(&account_id, &project_id, testlist, data).await;
+  match res {
+    Ok(inserted) => {
+      let id = inserted.inserted_id.as_object_id().unwrap().to_hex();
+      match testreport_repo.get_testreport_by_id(id.as_str()).await {
+        Ok(testreport) => match testreport {
+          Some(testreport) => {
+            for testcheck in testchecks {
+              let testcheck_id = testcheck.id.to_hex();
+              let testresult = testresult_repo.create_testresult(&id, testcheck).await;
+              if(testresult.is_err()) {
+                let _ = testresult_repo.delete_testreport_testresults(id.as_str()).await;
+                let _ = testresult_repo.delete_testresult(id.as_str()).await;
+                error!("Error creating testresult for testcheck: {}", testcheck_id);
+                return Err(JsonError::Internal("Error creating testresult".to_string()));
+              }
+            }
+            Ok(Json(testreport))
+          },
+          None => {
+            warn!("Testreport not found: {}", id);
+            Err(JsonError::NotFound("Testreport not found".to_string()))
+          },
+        },
+        Err(e) => {
+          error!("Error getting testreport: {}", e);
+          Err(JsonError::Internal("Error getting testreport".to_string()))
+        },
+      }
+    },
+    Err(e) => {
+      error!("Error creating testreport: {}", e);
+      Err(JsonError::Internal("Error creating testreport".to_string()))
+    },
+  }
+}
+
 pub fn get_testlists_routes() -> Vec<rocket::Route> {
-  routes![get_testlists, get_testlist, update_testlist, delete_testlist, get_testlist_testchecks, create_testlist_testcheck, update_testchecks_positions]
+  routes![get_testlists, get_testlist, update_testlist, delete_testlist, get_testlist_testchecks, create_testlist_testcheck, update_testchecks_positions, create_testreport]
 }
 
 async fn allowed_for_testlist(jwts: JWTSessionAndUser, testlist_repo: &State<MongoRepo<Testlist>>, testlist_id: &str) -> Result<Testlist, JsonError>  {

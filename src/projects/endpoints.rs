@@ -1,6 +1,6 @@
 use log::{error, warn};
 use rocket::{delete, get, post, put, routes, serde::json::Json, State};
-use crate::{projects::schema::ProjectDto, service::{db::MongoRepo, http_errors::JsonError}, sessions::{guards::authorize_as_admin, jwt::{get_jwt_session_and_user, JWT}, schema::{JWTSessionAndUser, Session}}, testlists::schema::{Testlist, TestlistDto}, users::{roles::is_admin, schema::User}};
+use crate::{projects::schema::ProjectDto, service::{db::MongoRepo, http_errors::JsonError}, sessions::{guards::authorize_as_admin, jwt::{get_jwt_session_and_user, JWT}, schema::{JWTSessionAndUser, Session}}, testlists::schema::{Testlist, TestlistDto}, testreports::schema::Testreport, users::{roles::is_admin, schema::User}};
 
 use super::schema::Project;
 
@@ -95,6 +95,20 @@ pub async fn get_project_testlists(jwt: Result<JWT, JsonError>, project_id: &str
   }
 }
 
+#[get("/<project_id>/testreports")]
+pub async fn get_project_testreports(jwt: Result<JWT, JsonError>, project_id: &str, sessions_repo: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>, projects_repo: &State<MongoRepo<Project>>, testreport_repo: &State<MongoRepo<Testreport>>) -> Result<Json<Vec<Testreport>>, JsonError> {
+  let jwts = get_jwt_session_and_user(sessions_repo, users_repo, jwt).await?;
+  allowed_for_project(jwts, projects_repo, project_id).await?;
+
+  match testreport_repo.get_project_testreports(project_id).await {
+    Ok(testreports) => Ok(Json(testreports)),
+    Err(e) => {
+      error!("Error getting testreports: {}", e);
+      Err(JsonError::Internal("Error getting testreport".to_string()))
+    },
+  }
+}
+
 #[post("/<project_id>/testlists", format = "json", data = "<testlist>")]
 pub async fn create_project_testlist(jwt: Result<JWT, JsonError>, project_id: &str, testlist: Json<TestlistDto>, projects_repo: &State<MongoRepo<Project>>, sessions_repo: &State<MongoRepo<Session>>, users_repo: &State<MongoRepo<User>>, testlist_repo: &State<MongoRepo<Testlist>>) -> Result<Json<Testlist>, JsonError> {
   let jwts = get_jwt_session_and_user(sessions_repo, users_repo, jwt).await?;
@@ -127,8 +141,9 @@ pub async fn create_project_testlist(jwt: Result<JWT, JsonError>, project_id: &s
   }
 }
 
+
 pub fn get_projects_routes() -> Vec<rocket::Route> {
-  routes![get_projects, get_project, update_project, delete_project, get_project_testlists, create_project_testlist]
+  routes![get_projects, get_project, update_project, delete_project, get_project_testlists, create_project_testlist, get_project_testreports]
 }
 
 

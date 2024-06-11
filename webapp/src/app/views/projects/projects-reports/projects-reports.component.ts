@@ -8,13 +8,13 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
-import { TestlistDto } from '../../../services/testlists/testlists.model';
-import { TestlistsService } from '../../../services/testlists/testlists.service';
+import { TestreportDto } from '../../../services/testreports/testreports.model';
+import { TestreportsService } from '../../../services/testreports/testreports.service';
 import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
-import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists-edit.component';
+import { TestreportsEditComponent } from '../../testreports/testreports-edit/testreports-edit.component';
 
 @Component({
-  selector: 'app-projects-testlists',
+  selector: 'app-projects-reports',
   standalone: true,
   imports: [
     MatGridListModule,
@@ -28,31 +28,36 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
   ],
   template: `
     <app-section-title
-      ><span i18n>Project Testlists</span>
-      <button mat-raised-button color="primary" (click)="createTestlist()" tool>
+      ><span i18n>Project Test Reports</span>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="createTestreport()"
+        tool
+      >
         <mat-icon>add</mat-icon>
-        <span i18n>Add testlist</span>
+        <span i18n>Add testreport</span>
       </button>
     </app-section-title>
     <mat-grid-list cols="4" rowHeight="2:1">
-      @for(testlist of testlists; track testlist) {
+      @for(testreport of testreports; track testreport) {
       <mat-grid-tile>
-        <mat-card class="testlist">
+        <mat-card class="testreport">
           <mat-card-header>
-            <mat-card-title>{{ testlist.name }}</mat-card-title>
+            <mat-card-title>{{ testreport.name }}</mat-card-title>
             <mat-card-subtitle>{{
-              testlist.created_at | date : 'medium'
+              testreport.created_at | date : 'medium'
             }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <p>{{ testlist.description }}</p>
+            <p>{{ testreport.description }}</p>
             <mat-divider></mat-divider>
           </mat-card-content>
           <mat-card-actions align="end">
             <button
               mat-button
               i18n
-              routerLink="/testlists/detail/{{ testlist._id }}"
+              routerLink="/testreports/detail/{{ testreport._id }}"
             >
               OPEN
             </button>
@@ -66,19 +71,19 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
     mat-grid-list {
       margin: 8px;
     }
-    .testlist {
+    .testreport {
       width: calc(100% - 16px);
       height: calc(100% - 16px);
       margin: 8px;
     }
   `,
 })
-export class ProjectsTestlistsComponent implements OnInit {
+export class ProjectsReportsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
-  private testlistsService = inject(TestlistsService);
+  private testreportsService = inject(TestreportsService);
 
-  testlists: TestlistDto[] = [];
+  testreports: TestreportDto[] = [];
 
   @Input() projectId!: string;
 
@@ -87,32 +92,32 @@ export class ProjectsTestlistsComponent implements OnInit {
   }
 
   refresh() {
-    this.testlistsService
-      .getProjectTestlists(this.projectId)
-      .then((testlists) => {
-        this.testlists = testlists;
+    this.testreportsService
+      .getProjectTestreports(this.projectId)
+      .then((testreports) => {
+        this.testreports = testreports;
       })
       .catch((err) => {
         console.error(err);
-        this.notificationService.error($localize`Failed to load testlists`);
+        this.notificationService.error($localize`Failed to load testreports`);
       });
   }
 
-  createTestlist() {
+  createTestreport() {
     this.dialog
-      .open(TestlistsEditComponent, { minWidth: '720px' })
+      .open(TestreportsEditComponent, { minWidth: '720px' })
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          this.testlistsService
-            .createTestlist(this.projectId, res)
+          this.testreportsService
+            .createTestreport(this.projectId, res)
             .then(() => {
-              this.notificationService.confirm($localize`Testlist created`);
+              this.notificationService.confirm($localize`Testreport created`);
               this.refresh();
             })
             .catch(() => {
               this.notificationService.error(
-                $localize`Failed to create testlist`
+                $localize`Failed to create testreport`
               );
             });
         }

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { TestlistDto } from '../../../services/testlists/testlists.model';
 import { TestlistsService } from '../../../services/testlists/testlists.service';
+import { TestreportEditDto } from '../../../services/testreports/testreports.model';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
 import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
@@ -28,6 +29,9 @@ import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.compone
       [back]="['/projects/detail', testlist?.project_id]"
     >
       {{ pageTitle }} {{ title }}
+      <button mat-icon-button (click)="createTestreport()" tool>
+        <mat-icon>summarize</mat-icon>
+      </button>
       <button mat-icon-button (click)="editTestlist()" tool>
         <mat-icon>edit</mat-icon>
       </button>
@@ -140,6 +144,36 @@ export class TestlistsDetailComponent implements OnInit {
               this.notificationService.error(
                 $localize`Failed to delete testlist`
               );
+            });
+        }
+      });
+  }
+
+  createTestreport() {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: $localize`Create Test Report`,
+          message: $localize`Confirm to create a new test report?`,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          const data: TestreportEditDto = {
+            name: this.testlist!.name,
+            description: this.testlist!.description,
+            execution: '', // TODO: setup form
+          };
+
+          this.testlistsService
+            .createTestreport(this.testlist!._id, data)
+            .then((data) => {
+              this.router.navigate(['/testreports/detail', data._id]);
+            })
+            .catch((err) => {
+              console.error(err);
+              this.notificationService.error($localize``);
             });
         }
       });

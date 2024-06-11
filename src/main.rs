@@ -5,6 +5,8 @@ mod accounts;
 mod projects;
 mod testlists;
 mod testchecks;
+mod testreports;
+mod testresults;
 
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
@@ -21,6 +23,9 @@ use service::db::connect;
 use service::http_errors::JsonError;
 use sessions::endpoints::get_sessions_routes;
 use sessions::service::get_sessions_repo;
+use testreports::endpoints::get_testreports_routes;
+use testreports::service::get_testreports_repo;
+use testresults::service::get_testresults_repo;
 use users::endpoints::get_users_routes;
 use users::service::get_users_repo;
 
@@ -33,6 +38,8 @@ async fn rocket() -> _ {
 
   let testlist_repo = get_testlists_repo(client.clone());
   let testcheck_repo = get_testchecks_repo(client.clone());
+  let testreport_repo = get_testreports_repo(client.clone());
+  let testresult_repo = get_testresults_repo(client.clone());
   let account_repo = get_accounts_repo(client.clone());
   let project_repo = get_projects_repo(client.clone());
   let sessions_repo = get_sessions_repo(client.clone());
@@ -62,12 +69,14 @@ async fn rocket() -> _ {
   .to_cors().unwrap();
 
   rocket::build()
+    .configure(rocket::Config::figment().merge(("port", 8080)))
     .mount("/api/v1/sessions", get_sessions_routes())
     .mount("/api/v1/users", get_users_routes())
     .mount("/api/v1/accounts", get_accounts_routes())
     .mount("/api/v1/projects", get_projects_routes())
     .mount("/api/v1/testlists", get_testlists_routes())
     .mount("/api/v1/testchecks", get_testchecks_routes())
+    .mount("/api/v1/testreports", get_testreports_routes())
     .attach(cors)
     .manage(cfg)
     .manage(account_repo)
@@ -76,6 +85,8 @@ async fn rocket() -> _ {
     .manage(users_repo)
     .manage(testlist_repo)
     .manage(testcheck_repo)
+    .manage(testreport_repo)
+    .manage(testresult_repo)
     .register("/", catchers![
       catch_bad_request,
       catch_unauthorized,

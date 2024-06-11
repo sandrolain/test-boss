@@ -28,7 +28,10 @@
               "src/assets",
               "src/mockServiceWorker.js"
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "@angular/material/prebuilt-themes/magenta-violet.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {

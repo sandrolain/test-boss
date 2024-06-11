@@ -4,66 +4,41 @@
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$webapp-primary: mat.$violet-palette;
-
-// The warn palette is optional (defaults to red).
-$webapp-error: mat.$red-palette;
-$webapp-warn: mat.$orange-palette;
-$webapp-confirm: mat.$green-palette;
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$webapp-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: $webapp-primary
-  ),
-  density: (
-    scale: 0
-  )
-));
-
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-html {
-  @include mat.all-component-themes($webapp-theme);
-}
 
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --app-title-color: #{mat.get-theme-color($webapp-theme, primary, 30)};
-  --app-label-color: #{mat.get-theme-color($webapp-theme, primary, 20)};
-  --app-table-section-background: #{mat.get-theme-color($webapp-theme, primary, 90)};
-  --app-alert-text-color: #{mat.get-theme-color($webapp-theme, error, 20)};
+  --app-title-color: var(--mdc-switch-selected-track-color);
+  --app-label-color: var(--mdc-switch-selected-track-color);
+  --app-alert-text-color: ;
   --mat-sidenav-container-divider-color: var(--mat-divider-color);
-  --mat-toolbar-container-background-color: #{mat.get-theme-color($webapp-theme, primary, 30)};
+  --mat-toolbar-container-background-color: var(--mat-divider-color);
+  --mdc-elevated-card-container-color: var(--mat-divider-color);
 }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+a {
+  color: var(--mat-sidenav-content-text-color);
+
+  &:hover {
+    color: var(--app-label-color);
+  }
+}
+
 .error-snackbar .mdc-snackbar__surface {
-  background-color: #{mat.get-theme-color($webapp-theme, error, 20)} !important;
+  //background-color:  !important;
   color: white;
 }
 
 .warn-snackbar .mdc-snackbar__surface {
-  background-color: #{mat.get-theme-color($webapp-theme, error, 20)} !important;
+  //background-color:  !important;
   color: white;
 }
 
 .confirm-snackbar .mdc-snackbar__surface {
-  background-color: #{mat.get-theme-color($webapp-theme, primary, 20)} !important;
+  //background-color: var(--mdc-outlined-text-field-error-outline-color) !important;
   color: white;
 }
 

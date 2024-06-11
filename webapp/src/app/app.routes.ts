@@ -141,6 +141,14 @@ export const routes: Routes = [
     canActivate: [authenticatedGuard],
   },
   {
+    path: 'testreports/detail/:id',
+    loadComponent: () =>
+      import(
+        './views/testreports/testreports-detail/testreports-detail.component'
+      ).then((mod) => mod.TestreportsDetailComponent),
+    canActivate: [authenticatedGuard],
+  },
+  {
     path: 'profile',
     loadComponent: () =>
       import('./views/profile/profile.component').then(

@@ -1,9 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { TestlistDto, TestlistEditDto } from './testlists.model';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { enc } from '../../lib/http';
+import {
+  TestreportDto,
+  TestreportEditDto,
+} from '../testreports/testreports.model';
+import { TestlistDto, TestlistEditDto } from './testlists.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +59,18 @@ export class TestlistsService {
     return firstValueFrom(
       this.http.delete<TestlistDto>(
         `${this.apiBaseUrl}/v1/testlists/${enc(id)}`
+      )
+    );
+  }
+
+  createTestreport(
+    id: string,
+    data: TestreportEditDto
+  ): Promise<TestreportDto> {
+    return firstValueFrom(
+      this.http.post<TestreportDto>(
+        `${this.apiBaseUrl}/v1/testlists/${enc(id)}/testreports`,
+        data
       )
     );
   }

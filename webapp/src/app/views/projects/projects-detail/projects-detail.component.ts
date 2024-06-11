@@ -9,6 +9,7 @@ import { ProjectDto } from '../../../services/projects/projects.model';
 import { ProjectsService } from '../../../services/projects/projects.service';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
+import { ProjectsReportsComponent } from '../projects-reports/projects-reports.component';
 import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testlists.component';
 
 @Component({
@@ -17,6 +18,7 @@ import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testl
   imports: [
     PageTitleComponent,
     ProjectsTestlistsComponent,
+    ProjectsReportsComponent,
     MatIconModule,
     MatButtonModule,
     DatePipe,
@@ -78,6 +80,9 @@ import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testl
     <app-projects-testlists
       [projectId]="project?._id || ''"
     ></app-projects-testlists>
+    <app-projects-reports
+      [projectId]="project?._id || ''"
+    ></app-projects-reports>
     }
   `,
   styles: ``,
