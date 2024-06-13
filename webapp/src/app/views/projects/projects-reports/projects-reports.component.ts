@@ -11,7 +11,6 @@ import { NotificationService } from '../../../services/notification/notification
 import { TestreportDto } from '../../../services/testreports/testreports.model';
 import { TestreportsService } from '../../../services/testreports/testreports.service';
 import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
-import { TestreportsEditComponent } from '../../testreports/testreports-edit/testreports-edit.component';
 
 @Component({
   selector: 'app-projects-reports',
@@ -29,16 +28,8 @@ import { TestreportsEditComponent } from '../../testreports/testreports-edit/tes
   template: `
     <app-section-title
       ><span i18n>Project Test Reports</span>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="createTestreport()"
-        tool
-      >
-        <mat-icon>add</mat-icon>
-        <span i18n>Add testreport</span>
-      </button>
     </app-section-title>
+    @if (testreports.length > 0) {
     <mat-grid-list cols="4" rowHeight="2:1">
       @for(testreport of testreports; track testreport) {
       <mat-grid-tile>
@@ -66,6 +57,9 @@ import { TestreportsEditComponent } from '../../testreports/testreports-edit/tes
       </mat-grid-tile>
       }
     </mat-grid-list>
+    } @else {
+    <div i18n>No reports found</div>
+    }
   `,
   styles: `
     mat-grid-list {
@@ -100,27 +94,6 @@ export class ProjectsReportsComponent implements OnInit {
       .catch((err) => {
         console.error(err);
         this.notificationService.error($localize`Failed to load testreports`);
-      });
-  }
-
-  createTestreport() {
-    this.dialog
-      .open(TestreportsEditComponent, { minWidth: '720px' })
-      .afterClosed()
-      .subscribe((res) => {
-        if (res) {
-          this.testreportsService
-            .createTestreport(this.projectId, res)
-            .then(() => {
-              this.notificationService.confirm($localize`Testreport created`);
-              this.refresh();
-            })
-            .catch(() => {
-              this.notificationService.error(
-                $localize`Failed to create testreport`
-              );
-            });
-        }
       });
   }
 }

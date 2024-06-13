@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild, effect, inject } from '@angular/core';
+import { Component, OnInit, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth.service';
 import { LoginResponse, RoleID } from './services/auth/login.model';
 import { NotificationService } from './services/notification/notification.service';
-import { AccountsService } from './services/accounts/accounts.service';
 import { ConfirmDialogComponent } from './widgets/confirm-dialog/confirm-dialog.component';
 import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.component';
 
@@ -27,11 +27,17 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
     RouterOutlet,
     LoaderOverlayComponent,
     RouterModule,
+    MatMenuModule,
   ],
   template: `
     <div id="app">
       @if(ready) {
       <mat-toolbar color="primary">
+        @if(loggedIn) {
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        }
         <div class="logo"><img src="assets/logo.jpeg" /></div>
         <span></span>
         @if(loggedIn) {
@@ -53,29 +59,21 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
         </button>
         }
       </mat-toolbar>
-      <mat-sidenav-container>
-        <mat-sidenav mode="side" [opened]="navOpened">
-          <mat-nav-list>
-            @for (link of links; track link) {
-            <a
-              mat-list-item
-              routerLink="{{ link.path }}"
-              routerLinkActive="menu-active"
-            >
-              <span class="menu-row">
-                <mat-icon matListIcon>{{ link.icon }}</mat-icon>
-                <span>{{ link.title }}</span>
-              </span>
-            </a>
-            @if (link.divider) {
-            <mat-divider></mat-divider>
-            } }
-          </mat-nav-list>
-        </mat-sidenav>
-        <mat-sidenav-content>
-          <router-outlet></router-outlet>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
+      <mat-menu #menu="matMenu">
+        @for (link of links; track link) {
+        <button
+          mat-menu-item
+          routerLink="{{ link.path }}"
+          routerLinkActive="menu-active"
+        >
+          <mat-icon>{{ link.icon }}</mat-icon>
+          <span>{{ link.title }}</span>
+        </button>
+        @if (link.divider) {
+        <mat-divider></mat-divider>
+        } }
+      </mat-menu>
+      <router-outlet></router-outlet>
       } @else {
       <app-loader-overlay></app-loader-overlay>
       }
@@ -86,12 +84,17 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
       #app {
         display: flex;
         flex-direction: column;
-        height: 100vh;
         background: var(--mat-app-background-color);
       }
+
       mat-toolbar {
         .logo {
-          height: calc(100% - 16px);
+          width: 48px;
+          height: 48px;
+          position: absolute;
+          top: 8px;
+          left: 50%;
+          transform: translateX(-50%);
 
           img {
             height: 100%;
@@ -101,14 +104,10 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
           flex: 1 1 auto;
         }
       }
-      mat-sidenav-container {
-        flex: 1 1 auto;
-      }
-      mat-sidenav {
-        width: 200px;
-      }
       mat-card {
         margin: 0 16px;
+        background: transparent;
+        box-shadow: none;
 
         a {
           color: inherit;
@@ -123,6 +122,11 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
           border-radius: 50%;
           width: 40px;
           height: 40px;
+        }
+
+        mat-card-title,
+        mat-card-subtitle {
+          color: inherit;
         }
       }
 
@@ -145,7 +149,6 @@ import { LoaderOverlayComponent } from './widgets/loader-overlay/loader-overlay.
 })
 export class AppComponent implements OnInit {
   private authService = inject(AuthService);
-  private accountsService = inject(AccountsService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
@@ -184,8 +187,6 @@ export class AppComponent implements OnInit {
   ];
 
   links: MenuLink[] = [];
-
-  @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor() {
     effect(() => {

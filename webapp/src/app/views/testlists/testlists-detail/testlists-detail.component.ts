@@ -9,6 +9,10 @@ import { TestlistDto } from '../../../services/testlists/testlists.model';
 import { TestlistsService } from '../../../services/testlists/testlists.service';
 import { TestreportEditDto } from '../../../services/testreports/testreports.model';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
+import {
+  DetailsBoxComponent,
+  DetailsBoxField,
+} from '../../../widgets/details-box/details-box.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
 import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
 import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.component';
@@ -22,6 +26,7 @@ import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.compone
     MatButtonModule,
     MatIconModule,
     DatePipe,
+    DetailsBoxComponent,
   ],
   template: `
     <app-page-title
@@ -39,30 +44,9 @@ import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.compone
         <mat-icon>delete_forever</mat-icon>
       </button>
     </app-page-title>
-    <div class="profile">
-      <div class="profile-details">
-        <div class="profile-field">
-          <label>ID:</label>
-          <span>{{ testlist?._id }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Name:</label>
-          <span>{{ testlist?.name }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Description:</label>
-          <span>{{ testlist?.description }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Created At:</label>
-          <span>{{ testlist?.created_at | date : 'medium' }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>UpdatedAt:</label>
-          <span>{{ testlist?.updated_at | date : 'medium' }}</span>
-        </div>
-      </div>
-    </div>
+
+    <app-details-box [fields]="detailsFields"></app-details-box>
+
     <app-testlists-checks [testlist]="testlist"></app-testlists-checks>
   `,
   styles: ``,
@@ -79,7 +63,25 @@ export class TestlistsDetailComponent implements OnInit {
   private testlistId!: string;
   testlist?: TestlistDto;
 
+  detailsFields: DetailsBoxField[] = [];
+
   constructor(private route: ActivatedRoute) {}
+
+  updateDetails() {
+    this.detailsFields = [
+      { label: $localize`ID`, value: this.testlist?._id },
+      { label: $localize`Name`, value: this.testlist?.name },
+      { label: $localize`Description`, value: this.testlist?.description },
+      {
+        label: $localize`Created At`,
+        value: this.testlist?.created_at,
+      },
+      {
+        label: $localize`UpdatedAt`,
+        value: this.testlist?.updated_at,
+      },
+    ];
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -94,6 +96,7 @@ export class TestlistsDetailComponent implements OnInit {
       .then((testlist) => {
         this.testlist = testlist;
         this.title = testlist.name;
+        this.updateDetails();
       })
       .catch((err) => {
         console.error(err);

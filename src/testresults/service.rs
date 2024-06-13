@@ -44,6 +44,7 @@ impl MongoRepo<Testresult> {
       description: testcheck.description,
       expected: testcheck.expected,
       tags: testcheck.tags,
+      position: testcheck.position,
       updated: false,
       executors: vec![],
       pass: false,

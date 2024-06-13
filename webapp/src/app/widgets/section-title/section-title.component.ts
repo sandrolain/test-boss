@@ -28,6 +28,7 @@ import { Component } from '@angular/core';
       border-top: 1px solid var(--mat-divider-color);
       border-top-right-radius: var(--mat-sidenav-container-shape);
       border-top-left-radius: var(--mat-sidenav-container-shape);
+      padding: 10px 0;
     }
     .left {
       display: flex;

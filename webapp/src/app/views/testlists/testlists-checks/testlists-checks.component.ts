@@ -55,7 +55,7 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
     </app-section-title>
     <mat-table
       #table
-      class="mat-elevation-z8"
+      class="mat-elevation-z2"
       cdkDropList
       [dataSource]="testchecks"
       cdkDropListData="dataSource"
@@ -63,14 +63,10 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
     >
       <ng-container matColumnDef="position" sticky>
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let item">
-          <mat-icon class="example-drag-cursor">reorder</mat-icon>
+        <mat-cell *matCellDef="let item" class="td-drag">
+          <mat-icon class="drag-cursor">reorder</mat-icon>
+          {{ item.position }}
         </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef i18n>ID</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item._id }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef i18n>Name</mat-header-cell>
@@ -122,7 +118,7 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
       width: 100%;
     }
 
-    .example-drag-cursor {
+    .drag-cursor {
       margin-right: 16px;
       cursor: move;
     }
@@ -159,7 +155,6 @@ export class TestlistsChecksComponent implements OnInit, OnChanges {
 
   displayedColumns: string[] = [
     'position',
-    'id',
     'name',
     'description',
     'expected',
@@ -281,6 +276,9 @@ export class TestlistsChecksComponent implements OnInit, OnChanges {
       )
       .then(() => {
         this.notificationService.confirm($localize`Test checks updated`);
+        for (let i = 0; i < this.testchecks.length; i++) {
+          this.testchecks[i].position = i + 1;
+        }
       })
       .catch(() => {
         this.notificationService.error($localize`Failed to update test checks`);

@@ -93,7 +93,7 @@ impl MongoRepo<Testcheck> {
   }
 
   pub async fn update_testlist_testchecks_positions(&self, testlist_id: &str, testchecks_ids: Vec<String>) -> Result<i32, Box<dyn Error + Send + Sync>> {
-    let mut position = 0;
+    let mut position = 1;
     let mut updates = 0;
     for id in testchecks_ids {
       let filter = doc! { "_id": ObjectId::parse_str(&id)?, "testlist_id": ObjectId::parse_str(testlist_id)? };

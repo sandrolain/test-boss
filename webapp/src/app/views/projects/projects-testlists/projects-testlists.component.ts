@@ -34,6 +34,7 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
         <span i18n>Add testlist</span>
       </button>
     </app-section-title>
+    @if (testlists.length > 0) {
     <mat-grid-list cols="4" rowHeight="2:1">
       @for(testlist of testlists; track testlist) {
       <mat-grid-tile>
@@ -61,6 +62,9 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
       </mat-grid-tile>
       }
     </mat-grid-list>
+    } @else {
+    <div i18n>No testlists found</div>
+    }
   `,
   styles: `
     mat-grid-list {

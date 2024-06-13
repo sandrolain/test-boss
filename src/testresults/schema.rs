@@ -19,6 +19,7 @@ pub struct Testresult {
   pub description: String,
   pub expected: String,
   pub tags: Vec<String>,
+  pub position: u16,
   // auto managed
   pub updated: bool,
   // result

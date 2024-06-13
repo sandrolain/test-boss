@@ -8,6 +8,10 @@ import { NotificationService } from '../../../services/notification/notification
 import { ProjectDto } from '../../../services/projects/projects.model';
 import { ProjectsService } from '../../../services/projects/projects.service';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
+import {
+  DetailsBoxComponent,
+  DetailsBoxField,
+} from '../../../widgets/details-box/details-box.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
 import { ProjectsReportsComponent } from '../projects-reports/projects-reports.component';
 import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testlists.component';
@@ -22,6 +26,7 @@ import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testl
     MatIconModule,
     MatButtonModule,
     DatePipe,
+    DetailsBoxComponent,
   ],
   template: `
     <app-page-title icon="group_work" [back]="['/projects']">
@@ -33,49 +38,9 @@ import { ProjectsTestlistsComponent } from '../projects-testlists/projects-testl
         <mat-icon>delete_forever</mat-icon>
       </button>
     </app-page-title>
-    <div class="profile">
-      <div class="profile-details">
-        <div class="profile-field">
-          <label>ID:</label>
-          <span>{{ project?._id }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Name:</label>
-          <span>{{ project?.name }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Version:</label>
-          <span>{{ project?.version }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Description:</label>
-          <span>{{ project?.description }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Repository:</label>
-          <span
-            >@if (project?.repository) {
-            <a
-              [href]="project?.repository"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ project?.repository }}</a
-            >
-            } @else {
-            <span>N/A</span>
-            }
-          </span>
-        </div>
-        <div class="profile-field">
-          <label i18n>Created At:</label>
-          <span>{{ project?.created_at | date : 'medium' }}</span>
-        </div>
-        <div class="profile-field">
-          <label i18n>UpdatedAt:</label>
-          <span>{{ project?.updated_at | date : 'medium' }}</span>
-        </div>
-      </div>
-    </div>
+
+    <app-details-box [fields]="detailsFields"></app-details-box>
+
     @if(project?._id) {
     <app-projects-testlists
       [projectId]="project?._id || ''"
@@ -97,6 +62,8 @@ export class ProjectsDetailComponent implements OnInit {
   pageTitle = $localize`Project:`;
   title = '';
 
+  detailsFields: DetailsBoxField[] = [];
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -107,6 +74,7 @@ export class ProjectsDetailComponent implements OnInit {
         .then((project) => {
           this.project = project;
           this.title = `${project.name} v${project.version}`;
+          this.updateDetails();
         })
         .catch((err) => {
           this.notificationService.error(
@@ -114,6 +82,27 @@ export class ProjectsDetailComponent implements OnInit {
           );
         });
     });
+  }
+
+  updateDetails() {
+    this.detailsFields = [
+      { label: $localize`ID`, value: this.project?._id },
+      { label: $localize`Name`, value: this.project?.name },
+      { label: $localize`Version`, value: this.project?.version },
+      { label: $localize`Description`, value: this.project?.description },
+      {
+        label: $localize`Created At`,
+        value: this.project?.created_at
+          ? new Date(this.project.created_at)
+          : null,
+      },
+      {
+        label: $localize`Updated At`,
+        value: this.project?.updated_at
+          ? new Date(this.project.updated_at)
+          : null,
+      },
+    ];
   }
 
   editProject() {
