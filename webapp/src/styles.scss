@@ -4,6 +4,10 @@
 @use '@angular/material' as mat;
 // Plus imports for other components in your app.
 
+// quill editor
+@import './assets/quill/quill.core.css';
+@import './assets/quill/quill.snow.css';
+
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -164,8 +168,10 @@ a {
     color: var(--app-label-color);
   }
 
-  span {
+  div {
     font-size: 16px;
+    line-height: 1.2em;
+    min-height: 1.2em;
   }
 }
 .chips {

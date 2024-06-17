@@ -90,7 +90,16 @@ export class TestreportsDetailComponent implements OnInit {
     this.detailsFields = [
       { label: $localize`ID`, value: this.testreport?._id },
       { label: $localize`Name`, value: this.testreport?.name },
-      { label: $localize`Description`, value: this.testreport?.description },
+      {
+        label: $localize`Description`,
+        value: this.testreport?.description,
+        html: true,
+      },
+      {
+        label: $localize`Execution`,
+        value: this.testreport?.execution,
+        html: true,
+      },
       {
         label: $localize`Created At`,
         value: this.testreport?.created_at

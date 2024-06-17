@@ -14,6 +14,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { QuillModule } from 'ngx-quill';
 import { NotificationService } from '../../../services/notification/notification.service';
 import {
   TestreportDto,
@@ -33,6 +34,7 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     MatInputModule,
     MatButtonModule,
     MatDialogModule,
+    QuillModule,
   ],
   template: `
     <h1 mat-dialog-title>{{ pageTitle }} {{ title }}</h1>
@@ -44,13 +46,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
             @if(testreportForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
           </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              placeholder="Description"
-              formControlName="description"
-            />
-          </mat-form-field>
+          <mat-label>Description</mat-label>
+          <quill-editor formControlName="description"></quill-editor>
+          <mat-label>Execution</mat-label>
+          <quill-editor formControlName="execution"></quill-editor>
         </form>
       </div>
     </div>
@@ -70,6 +69,7 @@ export class TestreportsEditComponent {
   testreportForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl('', []),
+    execution: new FormControl('', []),
   });
 
   testreportId?: string;
@@ -95,6 +95,7 @@ export class TestreportsEditComponent {
           this.testreportForm.patchValue(testreport);
         })
         .catch((err) => {
+          console.error(err);
           this.notificationService.error($localize`Failed to load testreport`);
         });
     }
@@ -109,6 +110,7 @@ export class TestreportsEditComponent {
     }
 
     const data = this.testreportForm.value as TestreportEditDto;
+    console.log('🚀 ~ TestreportsEditComponent ~ confirm ~ data:', data);
     this.dialogRef.close(data);
   }
 

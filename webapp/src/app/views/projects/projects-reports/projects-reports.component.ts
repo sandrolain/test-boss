@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
@@ -41,7 +40,7 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
             }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <p>{{ testreport.description }}</p>
+            <div [innerHTML]="testreport.description"></div>
             <mat-divider></mat-divider>
           </mat-card-content>
           <mat-card-actions align="end">
@@ -73,7 +72,6 @@ import { SectionTitleComponent } from '../../../widgets/section-title/section-ti
   `,
 })
 export class ProjectsReportsComponent implements OnInit {
-  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private testreportsService = inject(TestreportsService);
 

@@ -7,6 +7,7 @@ type DetailsBoxValue = string | number | Date | undefined | null;
 export interface DetailsBoxField {
   label: string;
   value: DetailsBoxValue;
+  html?: boolean;
 }
 
 @Component({
@@ -23,7 +24,11 @@ export interface DetailsBoxField {
           @for (field of fields; track field) {
           <div class="profile-field">
             <label>{{ field.label }}</label>
-            <span>{{ formatValue(field.value) }}</span>
+            @if(field.html) {
+            <div [innerHTML]="formatValue(field.value)"></div>
+            } @else {
+            <div>{{ formatValue(field.value) }}</div>
+            }
           </div>
           }
         </div>

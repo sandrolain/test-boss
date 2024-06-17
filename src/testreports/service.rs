@@ -57,6 +57,7 @@ impl MongoRepo<Testreport> {
     let upd_doc = doc! { "$set": {
       "name": data.name,
       "description": data.description,
+      "execution": data.execution,
       "updated_at": DateTime::from_chrono(now)
     } };
     let result = self.col.update_one(filter, upd_doc, None).await?;
