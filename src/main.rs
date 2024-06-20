@@ -8,6 +8,8 @@ mod testchecks;
 mod testreports;
 mod testresults;
 
+use std::time::Duration;
+
 use accounts::{endpoints::get_accounts_routes, service::get_accounts_repo};
 use projects::endpoints::get_projects_routes;
 use projects::service::get_projects_repo;
@@ -55,6 +57,7 @@ async fn rocket() -> _ {
   let _ = testcheck_repo.index("project_id").await;
   let _ = testcheck_repo.index("account_id").await;
   let _ = testcheck_repo.index("name").await;
+  let _ = sessions_repo.ttl_index("expires_at", Duration::from_secs(0)).await;
 
   let allowed_origins = AllowedOrigins::some_exact(&[&cfg.allowed_origins]);
 

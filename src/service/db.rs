@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use bson::{doc, oid::ObjectId, DateTime};
 use mongodb::{error::Error, options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion}, results::CreateIndexResult, Client, Collection, Database, IndexModel};
 use rocket::serde::Serializer;
@@ -26,8 +28,15 @@ impl<T> MongoRepo<T> {
     let index = IndexModel::builder().keys(doc! { prop: 1 }).build();
     self.col.create_index(index, None).await
   }
+
   pub async fn unique_index(&self, prop: &str) -> Result<CreateIndexResult, Error> {
     let opts = IndexOptions::builder().unique(true).build();
+    let index = IndexModel::builder().keys(doc! { prop: 1 }).options(opts).build();
+    self.col.create_index(index, None).await
+  }
+
+  pub async fn ttl_index(&self, prop: &str, after: Duration) -> Result<CreateIndexResult, Error> {
+    let opts = IndexOptions::builder().expire_after(after).build();
     let index = IndexModel::builder().keys(doc! { prop: 1 }).options(opts).build();
     self.col.create_index(index, None).await
   }
