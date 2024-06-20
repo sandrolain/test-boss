@@ -16,6 +16,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { QuillModule } from 'ngx-quill';
 import { NotificationService } from '../../../services/notification/notification.service';
 import {
   TestcheckDto,
@@ -37,6 +38,7 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     MatDialogModule,
     MatChipsModule,
     MatIconModule,
+    QuillModule,
   ],
   template: `
     <h1 mat-dialog-title>{{ pageTitle }} {{ title }}</h1>
@@ -48,14 +50,6 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
             <input matInput formControlName="name" />
             @if(testcheckForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label i18n>Description</mat-label>
-            <input matInput formControlName="description" />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label i18n>Expected</mat-label>
-            <input matInput formControlName="expected" />
           </mat-form-field>
           <mat-form-field class="example-form-field">
             <mat-label i18n>Tags</mat-label>
@@ -75,6 +69,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
               (matChipInputTokenEnd)="addTag($event)"
             />
           </mat-form-field>
+          <mat-label i18n>Description</mat-label>
+          <quill-editor formControlName="description"></quill-editor>
+          <mat-label i18n>Expected</mat-label>
+          <quill-editor formControlName="expected"></quill-editor>
         </form>
       </div>
     </div>

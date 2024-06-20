@@ -203,6 +203,8 @@ a {
 }
 .mat-mdc-header-row {
   border-radius: var(--mat-expansion-container-shape) var(--mat-expansion-container-shape) 0 0;
+  color: var(--app-title-color) !important;
+  font-weight: bold !important;
 
   .mat-mdc-header-cell:first-child {
     border-top-left-radius: var(--mat-expansion-container-shape);

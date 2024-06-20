@@ -62,7 +62,7 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
       (cdkDropListDropped)="drop($event)"
     >
       <ng-container matColumnDef="position" sticky>
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="td-drag"></mat-header-cell>
         <mat-cell *matCellDef="let item" class="td-drag">
           <mat-icon class="drag-cursor">reorder</mat-icon>
           {{ item.position }}
@@ -74,11 +74,15 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
       </ng-container>
       <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef i18n>Description</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.description }}</mat-cell>
+        <mat-cell *matCellDef="let item"
+          ><div [innerHTML]="item.description"></div
+        ></mat-cell>
       </ng-container>
       <ng-container matColumnDef="expected">
         <mat-header-cell *matHeaderCellDef i18n>Expected</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.expected }}</mat-cell>
+        <mat-cell *matCellDef="let item"
+          ><div [innerHTML]="item.expected"></div
+        ></mat-cell>
       </ng-container>
       <ng-container matColumnDef="tags">
         <mat-header-cell *matHeaderCellDef i18n>Tags</mat-header-cell>
@@ -91,7 +95,7 @@ import { TestchecksEditComponent } from '../../testchecks/testchecks-edit/testch
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="tools">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="td-tools"></mat-header-cell>
         <mat-cell *matCellDef="let item" class="td-tools">
           <button mat-icon-button (click)="editCheck(item)">
             <mat-icon>edit</mat-icon>
@@ -156,9 +160,9 @@ export class TestlistsChecksComponent implements OnInit, OnChanges {
   displayedColumns: string[] = [
     'position',
     'name',
+    'tags',
     'description',
     'expected',
-    'tags',
     'tools',
   ];
 

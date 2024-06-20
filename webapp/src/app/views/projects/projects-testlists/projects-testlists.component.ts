@@ -46,7 +46,7 @@ import { TestlistsEditComponent } from '../../testlists/testlists-edit/testlists
             }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <p>{{ testlist.description }}</p>
+            <div [innerHTML]="testlist.description"></div>
             <mat-divider></mat-divider>
           </mat-card-content>
           <mat-card-actions align="end">
