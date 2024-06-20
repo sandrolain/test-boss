@@ -34,39 +34,34 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     <div class="crud-form">
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <mat-form-field size="1:2">
-          <input matInput placeholder="Firstname" formControlName="firstname" />
+          <mat-label i18n>Firstname</mat-label>
+          <input matInput formControlName="firstname" />
           @if(userForm.get('firstname')?.hasError('required')) {
           <mat-error i18n>Firstname is required</mat-error>}
         </mat-form-field>
         <mat-form-field size="1:2">
-          <input matInput placeholder="Lastname" formControlName="lastname" />
+          <mat-label i18n>Lastname</mat-label>
+          <input matInput formControlName="lastname" />
           @if(userForm.get('lastname')?.hasError('required')) {
           <mat-error i18n>Lastname is required</mat-error>}
         </mat-form-field>
         <mat-form-field size="1:2">
-          <input
-            matInput
-            placeholder="Email"
-            type="email"
-            formControlName="email"
-          />
+          <mat-label i18n>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
           @if(userForm.get('email')?.hasError('required')) {
           <mat-error i18n>Email is required</mat-error>
           } @if(userForm.get('email')?.hasError('email')) {
           <mat-error i18n>Invalid email format</mat-error>}
         </mat-form-field>
         <mat-form-field size="1:2">
-          <input
-            matInput
-            placeholder="Phone"
-            type="tel"
-            formControlName="phone"
-          />
+          <mat-label i18n>Phone</mat-label>
+          <input matInput type="tel" formControlName="phone" />
           @if(userForm.get('phone')?.hasError('pattern')) {
           <mat-error i18n>Invalid phone format</mat-error>}
         </mat-form-field>
         <mat-form-field>
-          <input matInput placeholder="Address" formControlName="address" />
+          <mat-label i18n>Address</mat-label>
+          <input matInput formControlName="address" />
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit" i18n>
           Save

@@ -14,6 +14,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { QuillModule } from 'ngx-quill';
 import { NotificationService } from '../../../services/notification/notification.service';
 import {
   TestlistDto,
@@ -33,6 +34,7 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     MatInputModule,
     MatButtonModule,
     MatDialogModule,
+    QuillModule,
   ],
   template: `
     <h1 mat-dialog-title>{{ pageTitle }} {{ title }}</h1>
@@ -40,17 +42,13 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
       <div class="crud-form">
         <form [formGroup]="testlistForm">
           <mat-form-field>
-            <input matInput placeholder="Name" formControlName="name" />
+            <mat-label i18n>Name</mat-label>
+            <input matInput formControlName="name" />
             @if(testlistForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
           </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              placeholder="Description"
-              formControlName="description"
-            />
-          </mat-form-field>
+          <mat-label i18n>Description</mat-label>
+          <quill-editor formControlName="description"></quill-editor>
         </form>
       </div>
     </div>

@@ -42,13 +42,14 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
       <div class="crud-form">
         <form [formGroup]="testreportForm">
           <mat-form-field>
-            <input matInput placeholder="Name" formControlName="name" />
+            <mat-label i18n>Name</mat-label>
+            <input matInput formControlName="name" />
             @if(testreportForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
           </mat-form-field>
-          <mat-label>Description</mat-label>
+          <mat-label i18n>Description</mat-label>
           <quill-editor formControlName="description"></quill-editor>
-          <mat-label>Execution</mat-label>
+          <mat-label i18n>Execution</mat-label>
           <quill-editor formControlName="execution"></quill-editor>
         </form>
       </div>
@@ -98,6 +99,9 @@ export class TestreportsEditComponent {
           console.error(err);
           this.notificationService.error($localize`Failed to load testreport`);
         });
+    } else {
+      this.testreport = this.params;
+      this.testreportForm.patchValue(this.testreport);
     }
   }
 

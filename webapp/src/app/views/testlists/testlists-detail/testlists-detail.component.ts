@@ -7,13 +7,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { TestlistDto } from '../../../services/testlists/testlists.model';
 import { TestlistsService } from '../../../services/testlists/testlists.service';
-import { TestreportEditDto } from '../../../services/testreports/testreports.model';
 import { ConfirmDialogComponent } from '../../../widgets/confirm-dialog/confirm-dialog.component';
 import {
   DetailsBoxComponent,
   DetailsBoxField,
 } from '../../../widgets/details-box/details-box.component';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
+import { TestreportsEditComponent } from '../../testreports/testreports-edit/testreports-edit.component';
 import { TestlistsChecksComponent } from '../testlists-checks/testlists-checks.component';
 import { TestlistsEditComponent } from '../testlists-edit/testlists-edit.component';
 
@@ -153,30 +153,27 @@ export class TestlistsDetailComponent implements OnInit {
   }
 
   createTestreport() {
+    const data = this.testlist!;
+    const { name, description } = data;
     this.dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          title: $localize`Create Test Report`,
-          message: $localize`Confirm to create a new test report?`,
-        },
+      .open(TestreportsEditComponent, {
+        data: { name, description },
+        minWidth: '720px',
       })
       .afterClosed()
       .subscribe((res) => {
         if (res) {
-          const data: TestreportEditDto = {
-            name: this.testlist!.name,
-            description: this.testlist!.description,
-            execution: '', // TODO: setup form
-          };
-
           this.testlistsService
-            .createTestreport(this.testlist!._id, data)
-            .then((data) => {
-              this.router.navigate(['/testreports/detail', data._id]);
+            .createTestreport(data._id, res)
+            .then((res) => {
+              this.notificationService.confirm($localize`Testreport created`);
+              this.router.navigate(['/testreports/detail', res._id]);
             })
             .catch((err) => {
               console.error(err);
-              this.notificationService.error($localize``);
+              this.notificationService.error(
+                $localize`Failed to create testreport`
+              );
             });
         }
       });

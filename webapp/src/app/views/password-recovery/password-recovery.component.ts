@@ -37,10 +37,10 @@ import { LoaderOverlayComponent } from '../../widgets/loader-overlay/loader-over
       <h2 i18n>Specify new password</h2>
       <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
         <mat-form-field>
+          <mat-label i18n>New Password</mat-label>
           <input
             matInput
             type="password"
-            placeholder="New Password"
             formControlName="new_password"
           />
           @if(passwordForm.get('new_password')?.touched ) {
@@ -50,10 +50,10 @@ import { LoaderOverlayComponent } from '../../widgets/loader-overlay/loader-over
           <mat-error i18n>New Password must be valid</mat-error>} }
         </mat-form-field>
         <mat-form-field>
+          <mat-label i18n>Confirm Password</mat-label>
           <input
             matInput
             type="password"
-            placeholder="Confirm Password"
             formControlName="rpt_password"
           />
           @if(passwordForm.get('rpt_password')?.touched ) {
@@ -77,9 +77,9 @@ import { LoaderOverlayComponent } from '../../widgets/loader-overlay/loader-over
       <h2 i18n>Specify email for the account to recover</h2>
       <form [formGroup]="emailForm" (submit)="onEmailSubmit()">
         <mat-form-field>
+          <mat-label i18n>Email</mat-label>
           <input
             matInput
-            placeholder="Email"
             type="email"
             formControlName="email"
           />

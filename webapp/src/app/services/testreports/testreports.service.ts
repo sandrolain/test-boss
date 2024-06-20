@@ -24,18 +24,6 @@ export class TestreportsService {
     );
   }
 
-  createTestreport(
-    project_id: string,
-    data: TestreportEditDto
-  ): Promise<TestreportDto> {
-    return firstValueFrom(
-      this.http.post<TestreportDto>(
-        `${this.apiBaseUrl}/v1/projects/${enc(project_id)}/testreports`,
-        data
-      )
-    );
-  }
-
   getTestreport(id: string): Promise<TestreportDto> {
     return firstValueFrom(
       this.http.get<TestreportDto>(

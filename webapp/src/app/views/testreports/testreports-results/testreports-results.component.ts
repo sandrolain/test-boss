@@ -33,7 +33,7 @@ import { TestresultsEditComponent } from '../../testresults/testresults-edit/tes
   ],
   template: `
     <app-section-title><span i18n>Tests</span> </app-section-title>
-    <mat-table #table class="mat-elevation-z8" [dataSource]="testresults">
+    <mat-table #table class="mat-elevation-z2" [dataSource]="testresults">
       <ng-container matColumnDef="position" sticky>
         <mat-header-cell *matHeaderCellDef class="td-drag"></mat-header-cell>
         <mat-cell *matCellDef="let item" class="td-drag">

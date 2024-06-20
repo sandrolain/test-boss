@@ -10,12 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationService } from '../../../services/notification/notification.service';
 import {
   AccountDto,
   AccountEditDto,
 } from '../../../services/accounts/accounts.model';
 import { AccountsService } from '../../../services/accounts/accounts.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 import { PageTitleComponent } from '../../../widgets/page-title/page-title.component';
 
 @Component({
@@ -38,7 +38,8 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     <div class="crud-form">
       <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
         <mat-form-field>
-          <input matInput placeholder="Name" formControlName="name" />
+          <mat-label i18n>Name</mat-label>
+          <input matInput formControlName="name" />
           @if(accountForm.get('name')?.hasError('required')) {
           <mat-error i18n>Name is required</mat-error>}
         </mat-form-field>

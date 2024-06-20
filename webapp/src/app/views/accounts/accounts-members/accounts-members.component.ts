@@ -15,9 +15,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { Subject, debounceTime } from 'rxjs';
-import { NotificationService } from '../../../services/notification/notification.service';
 import { AccountsMembersListRequest } from '../../../services/accounts/accounts.model';
 import { AccountsService } from '../../../services/accounts/accounts.service';
+import { NotificationService } from '../../../services/notification/notification.service';
 import { UserDto } from '../../../services/users/users.model';
 import { AlertMessageComponent } from '../../../widgets/alert-message/alert-message.component';
 
@@ -56,6 +56,7 @@ import { AlertMessageComponent } from '../../../widgets/alert-message/alert-mess
     </div>
     <table
       mat-table
+      class="mat-elevation-z2"
       [dataSource]="list"
       matSort
       matSortActive="firstname"

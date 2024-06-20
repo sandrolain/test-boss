@@ -19,8 +19,8 @@ import { NotificationService } from '../../services/notification/notification.se
 import { UserDto, UsersListRequest } from '../../services/users/users.model';
 import { UsersService } from '../../services/users/users.service';
 import { AlertMessageComponent } from '../../widgets/alert-message/alert-message.component';
-import { PageTitleComponent } from '../../widgets/page-title/page-title.component';
 import { LoaderOverlayComponent } from '../../widgets/loader-overlay/loader-overlay.component';
+import { PageTitleComponent } from '../../widgets/page-title/page-title.component';
 
 @Component({
   selector: 'app-users',
@@ -66,6 +66,7 @@ import { LoaderOverlayComponent } from '../../widgets/loader-overlay/loader-over
     </div>
     <table
       mat-table
+      class="mat-elevation-z2"
       [dataSource]="list"
       matSort
       matSortActive="firstname"

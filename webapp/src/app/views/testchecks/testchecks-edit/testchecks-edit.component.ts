@@ -70,7 +70,7 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
               }
             </mat-chip-grid>
             <input
-              placeholder="New keyword..."
+              placeholder="New tag..."
               [matChipInputFor]="chipGrid"
               (matChipInputTokenEnd)="addTag($event)"
             />

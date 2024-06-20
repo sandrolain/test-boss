@@ -40,30 +40,26 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     <div class="crud-form">
       <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <mat-form-field size="1:2">
-          <input matInput placeholder="Name" formControlName="name" />
+          <mat-label i18n>Name</mat-label>
+          <input matInput formControlName="name" />
           @if(projectForm.get('name')?.hasError('required')) {
           <mat-error i18n>Name is required</mat-error>}
         </mat-form-field>
         <mat-form-field size="1:2">
-          <input matInput placeholder="Version" formControlName="version" />
+          <mat-label i18n>Version</mat-label>
+          <input matInput formControlName="version" />
           @if(projectForm.get('version')?.hasError('required')) {
           <mat-error i18n>Version is required</mat-error>}
           @if(projectForm.get('version')?.hasError('invalidSemver')) {
           <mat-error i18n>Version must be a valid semantic version</mat-error>}
         </mat-form-field>
         <mat-form-field>
-          <input
-            matInput
-            placeholder="Description"
-            formControlName="description"
-          />
+          <mat-label i18n>Description</mat-label>
+          <input matInput formControlName="description" />
         </mat-form-field>
         <mat-form-field>
-          <input
-            matInput
-            placeholder="Repository URL"
-            formControlName="repository"
-          />
+          <mat-label i18n>Repository URL</mat-label>
+          <input matInput formControlName="repository" />
           @if(projectForm.get('repository')?.hasError('invalidRepository')) {
           <mat-error i18n>Repository must be a valid URL</mat-error>}
         </mat-form-field>

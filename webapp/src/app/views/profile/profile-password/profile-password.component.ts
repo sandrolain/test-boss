@@ -37,10 +37,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
     <div class="crud-form">
       <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
         <mat-form-field size="1:2">
+          <mat-label i18n>Old Password</mat-label>
           <input
             matInput
             type="password"
-            placeholder="Old Password"
             formControlName="old_password"
           />
           @if(passwordForm.get('old_password')?.touched ) {
@@ -51,10 +51,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
         </mat-form-field>
         <div size="1:2"></div>
         <mat-form-field size="1:2">
+          <mat-label i18n>New Password</mat-label>
           <input
             matInput
             type="password"
-            placeholder="New Password"
             formControlName="new_password"
           />
           @if(passwordForm.get('new_password')?.touched ) {
@@ -64,10 +64,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
           <mat-error i18n>New Password must be valid</mat-error>} }
         </mat-form-field>
         <mat-form-field size="1:2">
+          <mat-label i18n>Confirm Password</mat-label>
           <input
             matInput
             type="password"
-            placeholder="Confirm Password"
             formControlName="rpt_password"
           />
           @if(passwordForm.get('rpt_password')?.touched ) {
