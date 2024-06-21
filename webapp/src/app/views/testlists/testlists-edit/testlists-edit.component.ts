@@ -47,8 +47,10 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
             @if(testlistForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
           </mat-form-field>
-          <mat-label i18n>Description</mat-label>
-          <quill-editor formControlName="description"></quill-editor>
+          <div class="form-field">
+            <mat-label i18n>Description</mat-label>
+            <quill-editor formControlName="description"></quill-editor>
+          </div>
         </form>
       </div>
     </div>

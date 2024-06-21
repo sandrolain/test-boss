@@ -47,16 +47,20 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
             @if(testreportForm.get('name')?.hasError('required')) {
             <mat-error i18n>Name is required</mat-error>}
           </mat-form-field>
-          <mat-label i18n>Description</mat-label>
-          <quill-editor formControlName="description"></quill-editor>
-          <mat-label i18n>Execution</mat-label>
-          <quill-editor formControlName="execution"></quill-editor>
+          <div class="form-field">
+            <mat-label i18n>Description</mat-label>
+            <quill-editor formControlName="description"></quill-editor>
+          </div>
+          <div class="form-field">
+            <mat-label i18n>Execution</mat-label>
+            <quill-editor formControlName="execution"></quill-editor>
+          </div>
         </form>
       </div>
     </div>
     <div mat-dialog-actions align="end">
-      <button mat-raised-button (click)="cancel()">Cancel</button>
-      <button mat-raised-button color="warn" (click)="confirm()">
+      <button mat-button color="warn" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="confirm()">
         Confirm
       </button>
     </div>

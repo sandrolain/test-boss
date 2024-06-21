@@ -69,10 +69,14 @@ import { PageTitleComponent } from '../../../widgets/page-title/page-title.compo
               (matChipInputTokenEnd)="addTag($event)"
             />
           </mat-form-field>
-          <mat-label i18n>Description</mat-label>
-          <quill-editor formControlName="description"></quill-editor>
-          <mat-label i18n>Expected</mat-label>
-          <quill-editor formControlName="expected"></quill-editor>
+          <div class="form-field">
+            <mat-label i18n>Description</mat-label>
+            <quill-editor formControlName="description"></quill-editor>
+          </div>
+          <div class="form-field">
+            <mat-label i18n>Expected</mat-label>
+            <quill-editor formControlName="expected"></quill-editor>
+          </div>
         </form>
       </div>
     </div>

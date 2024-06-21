@@ -17,6 +17,7 @@
   --app-alert-text-color: ;
   --mat-sidenav-container-divider-color: var(--mat-divider-color);
   --mat-toolbar-container-background-color: var(--mat-divider-color);
+  --mat-dialog-actions-padding: 0 24px 24px;
 }
 
 body {
@@ -65,8 +66,14 @@ a {
     gap: 16px;
     padding: 16px;
 
+    .mdc-dialog & {
+      width: auto;
+      max-width: 800px;
+      padding: 0;
+    }
+
     & > * {
-      width: calc(100% - 16px);
+      width: calc(100%);
       box-sizing: border-box;
 
       &[size="1:2"] {
@@ -84,6 +91,18 @@ a {
 
     .buttons {
       margin-top: 20px;
+    }
+
+    .form-field {
+      mat-label {
+        display: block;
+        color: var(--app-title-color);
+        padding: 0 16px 4px;
+      }
+
+      quill-editor {
+        width: 100%;
+      }
     }
   }
 }
@@ -223,5 +242,11 @@ a {
   }
   .mat-mdc-cell:last-child {
     border-bottom-right-radius: var(--mat-expansion-container-shape);
+  }
+}
+
+.mat-mdc-dialog-actions {
+  .mdc-button {
+    margin-left: 16px !important;
   }
 }
