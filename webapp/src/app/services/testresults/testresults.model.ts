@@ -7,6 +7,14 @@ export interface TestresultDto {
   description: string;
   expected: string;
   tags: string[];
+  notes: string;
+  pass: boolean;
+  flacky: boolean;
+  automated: boolean;
+  url_issue: string;
+  url_result: string;
+  executors: string[];
+  updated: boolean;
   position: number;
   created_at: string;
   updated_at: string;

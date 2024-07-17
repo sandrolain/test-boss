@@ -18,7 +18,9 @@ import { TestresultDto } from '../../../services/testresults/testresults.model';
 import { TestresultsService } from '../../../services/testresults/testresults.service';
 import { AlertMessageComponent } from '../../../widgets/alert-message/alert-message.component';
 import { SectionTitleComponent } from '../../../widgets/section-title/section-title.component';
+import { TestresultsDescComponent } from '../../testresults/testresults-desc/testresults-desc.component';
 import { TestresultsEditComponent } from '../../testresults/testresults-edit/testresults-edit.component';
+import { TestresultsPassComponent } from '../../testresults/testresults-pass/testresults-pass.component';
 
 @Component({
   selector: 'app-testreports-results',
@@ -30,6 +32,8 @@ import { TestresultsEditComponent } from '../../testresults/testresults-edit/tes
     MatButtonModule,
     AlertMessageComponent,
     SectionTitleComponent,
+    TestresultsPassComponent,
+    TestresultsDescComponent,
   ],
   template: `
     <app-section-title><span i18n>Tests</span> </app-section-title>
@@ -40,17 +44,19 @@ import { TestresultsEditComponent } from '../../testresults/testresults-edit/tes
           {{ item.position }}
         </mat-cell>
       </ng-container>
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef i18n>Name</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.name }}</mat-cell>
-      </ng-container>
       <ng-container matColumnDef="description">
         <mat-header-cell *matHeaderCellDef i18n>Description</mat-header-cell>
-        <mat-cell *matCellDef="let item">{{ item.description }}</mat-cell>
+        <mat-cell *matCellDef="let item">
+          <app-testresults-desc [value]="item"></app-testresults-desc>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="expected">
         <mat-header-cell *matHeaderCellDef i18n>Expected</mat-header-cell>
         <mat-cell *matCellDef="let item">{{ item.expected }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="notes">
+        <mat-header-cell *matHeaderCellDef i18n>Notes</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.notes }}</mat-cell>
       </ng-container>
       <ng-container matColumnDef="tags">
         <mat-header-cell *matHeaderCellDef i18n>Tags</mat-header-cell>
@@ -61,6 +67,12 @@ import { TestresultsEditComponent } from '../../testresults/testresults-edit/tes
             }
           </mat-chip-set>
         </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="pass">
+        <mat-header-cell *matHeaderCellDef i18n>Pass</mat-header-cell>
+        <mat-cell *matCellDef="let item"
+          ><app-testresults-pass [value]="item"></app-testresults-pass
+        ></mat-cell>
       </ng-container>
       <ng-container matColumnDef="tools">
         <mat-header-cell *matHeaderCellDef class="td-tools"></mat-header-cell>
@@ -91,10 +103,11 @@ export class TestreportsResultsComponent implements OnInit, OnChanges {
 
   displayedColumns: string[] = [
     'position',
-    'name',
+    'tags',
     'description',
     'expected',
-    'tags',
+    'notes',
+    'pass',
     'tools',
   ];
 
